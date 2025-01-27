@@ -1,0 +1,10 @@
+customerId,name,age,phone,address,country
+C1,Alice,30,123456789,123 Street,USA
+C2,Bob,25,987654321,456 Avenue,UK
+C3,Charlie,35,555555555,789 Boulevard,Canada
+C4,David,40,111222333,321 Road,Australia
+C5,Eva,22,222333444,654 Drive,Germany
+C6,Frank,28,333444555,987 Lane,France
+C7,Grace,33,444555666,123 Highway,Italy
+C8,Hannah,29,555666777,456 Parkway,Spain
+C9,Ivy,36,666777888,789 Avenue,Portugal
