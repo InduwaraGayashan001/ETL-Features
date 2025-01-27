@@ -77,7 +77,5 @@ public function main() returns error? {
 
     check io:fileWriteCsv("./resources/matched_customers.csv", splittedCustomers[0]);
     check io:fileWriteCsv("./resources/non_matched_customers.csv", splittedCustomers[1]);
-
-    return;
 }
 
