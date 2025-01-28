@@ -23,10 +23,9 @@ type Customer record {|
 configurable string apiKey = ?;
 
 function checkDuplicates(string searchValue, string dataValue) returns boolean|error {
-    // Define the API URL with the configurable API key
+ 
     string apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + apiKey;
 
-    // Create the JSON body for the request
     json requestBody = {
         "contents": [
             {
@@ -45,7 +44,6 @@ function checkDuplicates(string searchValue, string dataValue) returns boolean|e
         ]
     };
 
-    // Create the HTTP client
     http:Client apiClient = check new http:Client(apiUrl);
 
     record {} response = check apiClient->post("", requestBody);
@@ -68,6 +66,8 @@ function standardizeData(record {}[] dataSet, string fieldName, string searchVal
             if isDuplicate {
                 data[fieldName] = searchValue;
             }
+        }else{
+            return error("Invalid field name");
         }
     }
 
