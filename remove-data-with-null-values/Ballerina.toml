@@ -1,0 +1,8 @@
+[package]
+org = "induwarag"
+name = "remove_data_with_null_values"
+version = "0.1.0"
+distribution = "2201.10.3"
+
+[build-options]
+observabilityIncluded = true
