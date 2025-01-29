@@ -9,8 +9,7 @@ type Customer record {|
 function removeNull(record {}[] dataSet) returns record {}[] {
 
     record {}[] cleanedData = from record {} data in dataSet
-        let boolean containNull = isContainNull(data)
-        where !containNull
+        where !isContainNull(data)
         select data;
     return cleanedData;
 
