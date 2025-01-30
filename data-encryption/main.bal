@@ -9,26 +9,31 @@ type Customer record {|
     string phone;
 |};
 
-configurable byte[16] key  = ?;
+configurable string key  = ?;
 
-function encryptData(record{}[] dataSet, string fieldName) returns record{}[]|error {
+function encryptData(record{}[] dataSet, string fieldName, string keyBase64) returns record{}[]|error {
+    byte[] encrypt_key = check array:fromBase64(keyBase64);
     foreach record{} data in dataSet{
         if data.hasKey(fieldName){
             byte[] dataByte = data[fieldName].toString().toBytes();
-            byte[] cipherText = check crypto:encryptAesEcb(dataByte, key);
+            byte[] cipherText = check crypto:encryptAesEcb(dataByte, encrypt_key);
             data[fieldName] = cipherText.toBase64();
+        }else{
+            return error("Invalid Field Name");
         }
     }
     return dataSet;
 }
 
-
-function decryptData(record{}[] dataSet , string fieldName) returns record{}[]|error{
+function decryptData(record{}[] dataSet , string fieldName, string keyBase64) returns record{}[]|error{
+     byte[] decrypt_key = check array:fromBase64(keyBase64);
     foreach record{} data in dataSet{
         if data.hasKey(fieldName){
             byte[] dataByte = check array:fromBase64(data[fieldName].toString());
-            byte[] plainText = check crypto:decryptAesEcb(dataByte, key);
+            byte[] plainText = check crypto:decryptAesEcb(dataByte, decrypt_key);
             data[fieldName] = check string:fromBytes(plainText);
+        }else{
+            return error("Invalid Field Name");
         }
     }
     return dataSet;
@@ -36,8 +41,8 @@ function decryptData(record{}[] dataSet , string fieldName) returns record{}[]|e
 
 public function main() returns error?{
     Customer[] customers = check io:fileReadCsv("./resources/customers.csv");
-    record{}[] encryptedCustomers = check encryptData(customers,"phone");
+    record{}[] encryptedCustomers = check encryptData(customers,"phone" , key);
     check io:fileWriteCsv("./resources/encrypted_customers.csv", encryptedCustomers);
-    record {}[] decryptedCustomers = check decryptData(customers,"phone");
+    record {}[] decryptedCustomers = check decryptData(customers,"phone", key);
     check io:fileWriteCsv("./resources/decrypted_customers.csv", decryptedCustomers);
 }
