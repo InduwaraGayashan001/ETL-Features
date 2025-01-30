@@ -1,12 +1,11 @@
-name,city,phone
-John,Austin,(+94) 755787333
-Nick,New York,(+94) 755882346
-Paul,Sydney,(+94) 755903275
-Jo,Austin,(+94) 755912056
-Larry,Chicago,(+90) 755302222
-James,Portland,(+94) 755329943
-Smith,Denver,(+90) 755231324
-Rob,Boston,(+94) 755312434
-Kate,Dallas,(+94) 755321489
-Tim,Miami,(+94) 755312367
-Sara,Colombo,(+94) 774316512
+name,city,phone,age
+John,Austin,(555) 555-7873,18
+Nick,New York,(555) 555-8823,25
+Paul,Sydney,(555) 555-9032,35
+Jo,Austin,(555) 555-9120,45
+Larry,Chicago,(555) 555-3022,23
+James,Portland,(555) 555-3299,23
+Smith,Denver,(555) 555-2313,17
+Rob,Boston,(555) 555-3124,90
+Kate,Dallas,(555) 555-3214,40
+Tim,Miami,(555) 555-3123,50

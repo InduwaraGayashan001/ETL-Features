@@ -2,51 +2,41 @@ import ballerina/io;
 import ballerina/crypto;
 import ballerina/lang.array;
 
-
-type Customer record {|
-    string name;
-    string city;
-    string phone;
-|};
-
 configurable string key  = ?;
 
-function encryptData(record{}[] dataSet, string[] fieldNames, string keyBase64) returns record{}[]|error {
+function encryptData(string[] dataSet, string keyBase64) returns string[]|error{
     byte[] encrypt_key = check array:fromBase64(keyBase64);
-    foreach record{} data in dataSet{
-        foreach string fieldName in fieldNames{
-            if data.hasKey(fieldName){
-                byte[] dataByte = data[fieldName].toString().toBytes();
-                byte[] cipherText = check crypto:encryptAesEcb(dataByte, encrypt_key);
-                data[fieldName] = cipherText.toBase64();
-            }else{
-                return error("Invalid Field Name");
-            }
-        }   
+    foreach int i in 0...dataSet.length()-1{
+        byte[] dataByte = dataSet[i].toBytes();
+        byte[] cipherText = check crypto:encryptAesEcb(dataByte, encrypt_key);
+        dataSet[i] = cipherText.toBase64();
+
     }
-    return dataSet;
+    return dataSet; 
 }
 
-function decryptData(record{}[] dataSet , string[] fieldNames, string keyBase64) returns record{}[]|error{
-     byte[] decrypt_key = check array:fromBase64(keyBase64);
-    foreach record{} data in dataSet{
-        foreach string fieldName in fieldNames{
-            if data.hasKey(fieldName){
-                byte[] dataByte = check array:fromBase64(data[fieldName].toString());
-                byte[] plainText = check crypto:decryptAesEcb(dataByte, decrypt_key);
-                data[fieldName] = check string:fromBytes(plainText);
-            }else{
-                return error("Invalid Field Name");
-            }
-        }
-    }
-    return dataSet;
+function decryptData(string[] dataSet, string keyBase64)returns string[]|error{
+    byte[] decrypt_key = check array:fromBase64(keyBase64);
+    foreach int i in 0...dataSet.length()-1{
+        byte[] dataByte = check array:fromBase64(dataSet[i]);
+        byte[] plainText = check crypto:decryptAesEcb(dataByte, decrypt_key);
+        dataSet[i] = check string:fromBytes(plainText);
+    }return dataSet; 
+
+
 }
 
 public function main() returns error?{
-    Customer[] customers = check io:fileReadCsv("./resources/customers.csv");
-    record{}[] encryptedCustomers = check encryptData(customers,["city","phone"] , key);
-    check io:fileWriteCsv("./resources/encrypted_customers.csv", encryptedCustomers);
-    record {}[] decryptedCustomers = check decryptData(customers,["city","phone"], key);
-    check io:fileWriteCsv("./resources/decrypted_customers.csv", decryptedCustomers);
+
+    //Encrypt the data
+    string [] customers = check io:fileReadLines("./resources/customers.csv");
+    string [] encryptedCustomers = check encryptData(customers,key);
+    check io:fileWriteLines("./resources/encrypted_customers.csv", encryptedCustomers);
+
+    //Decrypt the data
+    string [] encryptedData = check io:fileReadLines("./resources/encrypted_customers.csv");
+    string[] decryptedData = check decryptData(encryptedData,key);
+    check io:fileWriteLines("./resources/decrypted_customers.csv", decryptedData);
+
+
 }
