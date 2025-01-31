@@ -8,7 +8,7 @@ type Customer record {|
     int age;
 |};
 
-function splitDataByRatio(record{}[] data, float ratio) returns record{}[][]|error {
+function splitDataByRatio(record{}[] data, float ratio) returns [record{}[],record{}[]]|error {
 
     int dataLength = data.length();
     int splittingPoint = <int>(dataLength * ratio);
@@ -42,8 +42,8 @@ function shuffle(record{}[] data) returns record{}[]|error {
 
 public function main() returns error? {
     Customer[] customers = check io:fileReadCsv("./resources/customers.csv");
-    record{}[][] splittedCustomers = check splitDataByRatio(customers, 0.7);
-    io:println(`First Dataset : ${splittedCustomers[0]} ${"\n\n"}Second Dataset : ${splittedCustomers[1]}${"\n"}`);
-    check io:fileWriteCsv("./resources/customers_1.csv",splittedCustomers[0]);
-    check io:fileWriteCsv("./resources/customers_2.csv",splittedCustomers[1]);    
+    [record{}[],record{}[]] [customers1, customers2] = check splitDataByRatio(customers, 0.7);
+    io:println(`First Dataset : ${customers1} ${"\n\n"}Second Dataset : ${customers2}${"\n"}`);
+    check io:fileWriteCsv("./resources/customers_1.csv",customers1);
+    check io:fileWriteCsv("./resources/customers_2.csv",customers2);    
 }
