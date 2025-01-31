@@ -52,11 +52,11 @@ public function main() returns error? {
 
     io:println(`Category 1(Age 10-20) : ${categorizedCustomers[0]} ${"\n\n"}Category 2(Age 20-30) : ${categorizedCustomers[1]} ${"\n\n"}Category 3(Age 30-40) : ${categorizedCustomers[2]} ${"\n\n"}Category 4(Age 40-50) : ${categorizedCustomers[3]} ${"\n\n"}Category 5(Age 50-60) : ${categorizedCustomers[4]} ${"\n\n"}Category 6(Other) : ${categorizedCustomers[5]} ${"\n"}`);
 
-    check io:fileWriteCsv("./resources/customers1.csv", categorizedCustomers[0]);
-    check io:fileWriteCsv("./resources/customers2.csv", categorizedCustomers[1]);
-    check io:fileWriteCsv("./resources/customers3.csv", categorizedCustomers[2]);
-    check io:fileWriteCsv("./resources/customers4.csv", categorizedCustomers[3]);
-    check io:fileWriteCsv("./resources/customers5.csv", categorizedCustomers[4]);
-    check io:fileWriteCsv("./resources/customers6.csv", categorizedCustomers[5]);
+    foreach int i in 0...rangeArray.length() {
+        check io:fileWriteCsv(string `./resources/customers${i+1}.csv`, categorizedCustomers[i]);
+  
+    }
+
+    
 }
 
