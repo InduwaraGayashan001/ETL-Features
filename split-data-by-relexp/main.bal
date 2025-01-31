@@ -7,7 +7,7 @@ type Customer record {|
     int age;
 |};
 
-function splitDataByOperation(record {}[] dataSet, string fieldName, string operation, float value) returns record {}[][]|error {
+function splitDataByOperation(record {}[] dataSet, string fieldName, string operation, float value) returns [record {}[], record{}[]]|error  {
 
     record {}[] matchedData = [];
     record {}[] nonMatchedData = [];
@@ -71,11 +71,11 @@ public function main() returns error? {
     string operation = ">";
     float value = 21;
 
-    record {}[][] splittedCustomers = check splitDataByOperation(customers, fieldName, operation, value);
+    [record {}[], record{}[]] [matchedCustomers, nonMatchedCustomers] = check splitDataByOperation(customers, fieldName, operation, value);
 
-    io:println(`Matched Data: ${splittedCustomers[0]} ${"\n\n"}Non Matched Data: ${splittedCustomers[1]}${"\n"}`);
+    io:println(`Matched Data: ${matchedCustomers} ${"\n\n"}Non Matched Data: ${nonMatchedCustomers}${"\n"}`);
 
-    check io:fileWriteCsv("./resources/matched_customers.csv", splittedCustomers[0]);
-    check io:fileWriteCsv("./resources/non_matched_customers.csv", splittedCustomers[1]);
+    check io:fileWriteCsv("./resources/matched_customers.csv", matchedCustomers);
+    check io:fileWriteCsv("./resources/non_matched_customers.csv", nonMatchedCustomers);
+
 }
-
