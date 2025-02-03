@@ -18,20 +18,6 @@ function handleWhiteSpaces(record {}[] dataSet) returns record {}[] {
     return dataSet;
 }
 
-function batchProcessing(record{}[][] batches) returns future<record {|anydata...;|}[]>[] {
-    // Create a list to hold future results
-    future<record{}[]>[] futureResults = [];
-
-    // Process each batch asynchronously
-    foreach record{}[] batch in batches {
-        // Start a future task to handle whitespace cleaning
-        future<record{}[]> processingFuture = start handleWhiteSpaces(batch);
-        futureResults.push(processingFuture);
-    }
-
-
-    return futureResults;
-}
 
 public function main() returns error? {
 
@@ -41,8 +27,5 @@ public function main() returns error? {
 
     io:println(cleanedCustomers);
     check io:fileWriteCsv("./resources/cleaned_customers.csv", cleanedCustomers);
-
-    future<record{}[]>[] futureResults =  batchProcessing([customers,cleanedCustomers]);
-    io:println(futureResults);
 
 }
