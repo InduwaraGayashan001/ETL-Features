@@ -8,21 +8,17 @@ type SalesOrder record {|
     int date;
 |};
 
-function removeDuplicates(record{}[] dataWithDuplicates) returns record{}[]{
-    record{}[] dataWithoutDuplicates = [];
-    foreach record{} data in dataWithDuplicates{
-        if dataWithoutDuplicates.indexOf(data) == (){
-            dataWithoutDuplicates.push(data);
-        }
-    }
-    return dataWithoutDuplicates;
+function removeDuplicates(record {}[] dataWithDuplicates) returns record {}[] {
+    return from var data in dataWithDuplicates
+        group by data
+        select data;
 }
 
 public function main() returns error? {
-    
+
     SalesOrder[] orders = check io:fileReadCsv("./resources/orders.csv");
 
-    record{}[] uniqueOrders = removeDuplicates(orders);
+    record {}[] uniqueOrders = removeDuplicates(orders);
     io:println(uniqueOrders);
 
     check io:fileWriteCsv("./resources/unique_orders.csv", uniqueOrders);
