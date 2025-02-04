@@ -7,10 +7,10 @@ type Customer record {|
 |};
 
 function mergeData(record {}[][] dataSets) returns record {}[] {
-    record {}[] mergedData = from record {}[] dataSet in dataSets
+
+    return from record {}[] dataSet in dataSets
         from record {} data in dataSet
         select data;
-    return mergedData;
 }
 
 public function main() returns error? {
