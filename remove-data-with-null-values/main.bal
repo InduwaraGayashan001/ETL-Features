@@ -7,11 +7,9 @@ type Customer record {|
 |};
 
 function removeNull(record {}[] dataSet) returns record {}[] {
-
-    record {}[] cleanedData = from record {} data in dataSet
+    return from record {} data in dataSet
         where !isContainNull(data)
         select data;
-    return cleanedData;
 
 }
 
