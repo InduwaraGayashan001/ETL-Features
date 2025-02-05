@@ -1,6 +1,6 @@
 [package]
 org = "induwarag"
-name = "categorize_data"
+name = "categorize_numeric_data"
 version = "0.1.0"
 distribution = "2201.10.3"
 
