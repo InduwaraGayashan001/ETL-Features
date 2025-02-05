@@ -8,8 +8,7 @@ type Customer record {|
 |};
 
 function removeField(record{}[] dataSet, string fieldName) returns record{}[]{
-    record{}[] updatedData = from record{} data in dataSet let var val = data.remove(fieldName) where val != () select data;
-    return updatedData;
+    return from record{} data in dataSet let var val = data.remove(fieldName) where val != () select data;
 }
 public function main() returns error?{
 
