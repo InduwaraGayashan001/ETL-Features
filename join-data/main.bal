@@ -13,24 +13,26 @@ type ContactDetails record {
     string country;
 };
 
-function joinData(record {}[] dataSet1, record {}[] dataSet2, string primaryKey) returns record{}[]|error {
+function joinData(record {}[] dataSet1, record {}[] dataSet2, string primaryKey) returns record {}[]|error {
 
-    record{}[] updatedCustomers =[];
+    record {}[] updatedCustomers = [];
 
-    record {}[][] similarCustomers = from record{} data1 in dataSet1 join record{} data2 in dataSet2 on data1[primaryKey] equals data2[primaryKey] select [data1,data2];
-    foreach record{}[] similarCustomer in similarCustomers{
-        foreach string key in similarCustomer[1].keys(){
-            if similarCustomer[0].hasKey(primaryKey) && similarCustomer[1].hasKey(primaryKey){
+    record {}[][] similarCustomers = from record {} data1 in dataSet1
+        join record {} data2 in dataSet2 on data1[primaryKey] equals data2[primaryKey]
+        select [data1, data2];
+    foreach record {}[] similarCustomer in similarCustomers {
+        foreach string key in similarCustomer[1].keys() {
+            if similarCustomer[0].hasKey(primaryKey) && similarCustomer[1].hasKey(primaryKey) {
                 similarCustomer[0][key] = similarCustomer[1][key];
 
-            }else{
+            } else {
                 return error("Invalid Primary key");
             }
-            
+
         }
-        updatedCustomers.push(similarCustomer[0]);          
+        updatedCustomers.push(similarCustomer[0]);
     }
-    return updatedCustomers;   
+    return updatedCustomers;
 }
 
 public function main() returns error? {
@@ -41,6 +43,6 @@ public function main() returns error? {
     record {}[] customerDetails = check joinData(customers, contactDetails, "customerId");
 
     io:println(`Updated Customer Details: ${customerDetails}${"\n"}`);
-    check io:fileWriteCsv("./resources/customer_details.csv",customerDetails);
+    check io:fileWriteCsv("./resources/customer_details.csv", customerDetails);
 }
 
