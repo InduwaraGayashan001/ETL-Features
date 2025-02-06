@@ -8,16 +8,13 @@ type Customer record {|
 
 function handleWhiteSpaces(record {}[] dataSet) returns record {}[] {
 
-    foreach record {} data in dataSet {
-        foreach string key in data.keys() {
-            string:RegExp extraSpaces = re `\s+`;
-            string dataWithoutExtraSpaces = extraSpaces.replaceAll(data[key].toString(), " ");
-            data[key] = dataWithoutExtraSpaces.trim();
+    foreach record {} data in dataSet{ 
+        foreach string key in data.keys(){  
+            data[key] = re `\s+`.replaceAll(data[key].toString(), " ").trim();
         }
     }
     return dataSet;
 }
-
 
 public function main() returns error? {
 
