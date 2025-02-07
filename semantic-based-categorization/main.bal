@@ -2,7 +2,6 @@ import ballerina/http;
 import ballerina/io;
 import ballerina/regex;
 
-
 type Message record {
     string text;
 };
@@ -23,10 +22,11 @@ type Order record {|
 
 configurable string apiKey = ?;
 
-function categorizeSemantic(record{}[] dataSet ,string fieldName, string[] categories) returns record{}[][]|error {
+function categorizeSemantic(record {}[] dataSet, string fieldName, string[] categories) returns record {}[][]|error {
 
-    string valueArray  = from record{} data in dataSet select data[fieldName].toString();
- 
+    string[] valueArray = from record {} data in dataSet
+        select data[fieldName].toString();
+
     string apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + apiKey;
 
     json requestBody = {
@@ -53,25 +53,20 @@ function categorizeSemantic(record{}[] dataSet ,string fieldName, string[] categ
     Content[] result = check response["candidates"].cloneWithType();
     string output = result[0].content.parts[0].text;
 
-    io:println(output);
-
-    string[] correctArray = re`,`.split(regex:replaceAll(output, "\"|'|\\[|\\]", ""));
-    foreach int i in 0 ... correctArray.length()-1{
+    string[] correctArray = re `,`.split(regex:replaceAll(output, "\"|'|\\[|\\]", ""));
+    foreach int i in 0 ... correctArray.length() - 1 {
         correctArray[i] = correctArray[i].trim();
     }
-
-    io:println(correctArray);
 
     record {}[][] categorizedData = [];
     foreach int i in 0 ... categories.length() {
         categorizedData.push([]);
     }
 
-
-    foreach int i in 0...dataSet.length()-1{
-        if (dataSet[i].hasKey(fieldName)){
+    foreach int i in 0 ... dataSet.length() - 1 {
+        if (dataSet[i].hasKey(fieldName)) {
             boolean isCategorized = false;
-            
+
             foreach string category in categories {
                 if (category.equalsIgnoreCaseAscii(correctArray[i])) {
                     categorizedData[<int>categories.indexOf(category)].push(dataSet[i]);
@@ -97,13 +92,11 @@ public function main() returns error? {
 
     string[] categoryArray = ["Excellent", "Normal", "Worst"];
 
-    record {}[][] categorizedOrders =  check categorizeSemantic(orders, "comments", categoryArray);
-   
-    foreach int i in 0...categorizedOrders.length()-1 {
-        check io:fileWriteCsv(string `./resources/orders${i+1}.csv`, categorizedOrders[i]);
-  
+    record {}[][] categorizedOrders = check categorizeSemantic(orders, "comments", categoryArray);
+
+    foreach int i in 0 ... categorizedOrders.length() - 1 {
+        check io:fileWriteCsv(string `./resources/orders${i + 1}.csv`, categorizedOrders[i]);
+
     }
 
-   
-  
 }
