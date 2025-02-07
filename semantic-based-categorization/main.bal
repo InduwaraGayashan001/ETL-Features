@@ -95,13 +95,15 @@ public function main() returns error? {
 
     Order[] orders = check io:fileReadCsv("./resources/orders.csv");
 
-    string[] array1 = ["Excellent", "Normal", "Worst"];
+    string[] categoryArray = ["Excellent", "Normal", "Worst"];
 
-    record {}[][] category =  check categorizeSemantic(orders, "comments", array1);
+    record {}[][] categorizedOrders =  check categorizeSemantic(orders, "comments", categoryArray);
    
-    io:println(category);
+    foreach int i in 0...categorizedOrders.length()-1 {
+        check io:fileWriteCsv(string `./resources/orders${i+1}.csv`, categorizedOrders[i]);
+  
+    }
 
-    // string[] correctArray = re`,`.split(regex:replaceAll(array1.toString(), "\"|\\[|\\]", ""));
-    // io:println(correctArray);
+   
   
 }
