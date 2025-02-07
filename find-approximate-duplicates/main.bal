@@ -1,5 +1,6 @@
 import ballerina/http;
 import ballerina/io;
+import ballerina/regex;
 
 type Message record {
     string text;
@@ -22,8 +23,11 @@ type Customer record {|
 
 configurable string apiKey = ?;
 
-function checkDuplicates(string searchValue, string dataValue) returns boolean|error {
- 
+function standardizeData(record {}[] dataSet, string fieldName, string searchValue) returns record {}[]|error {
+
+    string[] valueArray = from record {} data in dataSet
+        select data[fieldName].toString();
+
     string apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + apiKey;
 
     json requestBody = {
@@ -31,13 +35,13 @@ function checkDuplicates(string searchValue, string dataValue) returns boolean|e
             {
                 "parts": [
                     {
-                        "text": "Determine whether the following texts are approximate duplicates. Please respond with 'yes' or 'no' only."
+                        "text": "Determine whether each text in the given array is an approximate duplicate of the provided search value. Respond only with an array of 'yes' or 'no'."
+                    },
+                    {
+                        "text": valueArray.toString()
                     },
                     {
                         "text": searchValue
-                    },
-                    {
-                        "text": dataValue
                     }
                 ]
             }
@@ -51,23 +55,14 @@ function checkDuplicates(string searchValue, string dataValue) returns boolean|e
     Content[] result = check response["candidates"].cloneWithType();
 
     string output = result[0].content.parts[0].text;
-
-    if output == "yes\n" {
-        return true;
-    } else {
-        return false;
+    string[] correctArray = re `,`.split(regex:replaceAll(output, "\"|'|\\[|\\]", ""));
+    foreach int i in 0 ... correctArray.length() - 1 {
+        correctArray[i] = correctArray[i].trim();
     }
-}
 
-function standardizeData(record {}[] dataSet, string fieldName, string searchValue) returns record {}[]|error {
-    foreach record {} data in dataSet {
-        if data.hasKey(fieldName) {
-            boolean isDuplicate = check checkDuplicates(searchValue, data[fieldName].toString());
-            if isDuplicate {
-                data[fieldName] = searchValue;
-            }
-        }else{
-            return error("Invalid field name");
+    foreach int i in 0 ... dataSet.length() - 1 {
+        if correctArray[i] is "yes" {
+            dataSet[i][fieldName] = searchValue;
         }
     }
 
@@ -80,5 +75,4 @@ public function main() returns error? {
     record {}[] updatedCustomers = check standardizeData(customers, "city", "New York");
     io:println(`Updated Customers: ${updatedCustomers}`);
     check io:fileWriteCsv("./resources/updated_customers.csv", updatedCustomers);
-
 }
