@@ -1,4 +1,4 @@
-customer_id,customer_name,email,phone,address
+customerId,customerName,email,phone,address
 1,John Doe,john.doe@email.com,1234567890,123 Main St
 3,Jane Smith,jane.smith@email.com,0987654321,456 Elm St
 5,Mark Johnson,mark.j@email.com,1112223333,789 Oak St

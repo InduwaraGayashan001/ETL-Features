@@ -1,4 +1,4 @@
-customer_id,customer_name,email,phone,address
+customerId,customerName,email,phone,address
 1,John Doe,john.doe@email.com,1234567890,123 Main St
 2,Jon Doe,john.doe@email.com,1234567890,123 Main Street
 3,Jane Smith,jane.smith@email.com,0987654321,456 Elm St
@@ -6,4 +6,3 @@ customer_id,customer_name,email,phone,address
 5,Mark Johnson,mark.j@email.com,1112223333,789 Oak St
 6,Emily Clark,emily.clark@email.com,2223334444,101 Pine St
 7,Emilly Clark,emily.clark@email.com,2223334444,101 Pine Street
-            
