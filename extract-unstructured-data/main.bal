@@ -18,7 +18,6 @@ type Review record {|
     string goodPoints;
     string badPoints;
     string improvements;
-    int age;
 |};
 
 configurable string apiKey = ?;
@@ -73,12 +72,14 @@ public function main() returns error? {
 
     string[] reviews = check io:fileReadLines("./resources/Input.txt");
 
-    string[] fields = ["Good Points", "Bad Points", "Improvements"];
+    string[] fields = ["goodPoints", "badPoints", "improvements"];
 
     record{} extractedDetails = check extractUnstructuredData(reviews,fields);
 
-    io:println(extractedDetails);
+    io:println(extractedDetails.cloneWithType(Review));
 
     check io:fileWriteJson("./resources/output.json",extractedDetails.toJson());
+
+    
 
 }
