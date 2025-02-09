@@ -71,13 +71,8 @@ function extractUnstructuredData(string[] dataSet, string[] fieldNames) returns 
 public function main() returns error? {
 
     string[] reviews = check io:fileReadLines("./resources/Input.txt");
-
     string[] fields = ["goodPoints", "badPoints", "improvements"];
-
     record {} extractedDetails = check extractUnstructuredData(reviews, fields);
-
     io:println(`Extracted Details : ${extractedDetails.cloneWithType(Review)}`);
-
     check io:fileWriteJson("./resources/output.json", extractedDetails.toJson());
-
 }
