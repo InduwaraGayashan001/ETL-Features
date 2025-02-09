@@ -1,5 +1,5 @@
-import ballerina/io;
 import ballerina/http;
+import ballerina/io;
 import ballerina/regex;
 
 type Message record {
@@ -14,7 +14,7 @@ type Content record {
     Item content;
 };
 
-type  Customer record{
+type Customer record {
     string customerId;
     string customerName;
     string email;
@@ -22,11 +22,9 @@ type  Customer record{
     string address;
 };
 
-
-
 configurable string apiKey = ?;
 
-function removeApproximateDuplicates(record{}[] dataSet) returns record{}[]|error{
+function removeApproximateDuplicates(record {}[] dataSet) returns record {}[]|error {
 
     string apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + apiKey;
 
@@ -61,13 +59,14 @@ function removeApproximateDuplicates(record{}[] dataSet) returns record{}[]|erro
         correctArray[i] = correctArray[i].trim();
     }
 
-    return from record{} data in dataSet where correctArray[<int>dataSet.indexOf(data)] is "unique" select data;
-    
+    return from record {} data in dataSet
+        where correctArray[<int>dataSet.indexOf(data)] is "unique"
+        select data;
 }
-public function main() returns error?{
-    Customer[] customers = check io:fileReadCsv("./resources/customers.csv");
-    record {}[] uniqueCusstomers = check removeApproximateDuplicates(customers);
-    io:println(uniqueCusstomers);
 
-    check io:fileWriteCsv("./resources/unique_customers.csv", uniqueCusstomers);
+public function main() returns error? {
+    Customer[] customers = check io:fileReadCsv("./resources/customers.csv");
+    record {}[] uniqueCustomers = check removeApproximateDuplicates(customers);
+    io:println(`Unique Customers: ${uniqueCustomers}${"\n"}`);
+    check io:fileWriteCsv("./resources/unique_customers.csv", uniqueCustomers);
 }

@@ -28,6 +28,7 @@ public function main() returns error? {
 
     Customer[] customers = check io:fileReadCsv("./resources/customers.csv");
     record {}[] cleanedCustomers = removeNull(customers);
+    io:println(`Updated Customers: ${cleanedCustomers}${"\n"}`);
     check io:fileWriteCsv("./resources/cleaned_customers.csv", cleanedCustomers);
 
 }

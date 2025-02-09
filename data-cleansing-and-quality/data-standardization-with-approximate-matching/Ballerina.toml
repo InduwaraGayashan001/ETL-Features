@@ -1,6 +1,6 @@
 [package]
 org = "induwarag"
-name = "find_approximate_duplicates"
+name = "data_standardization_with_approximate_matching"
 version = "0.1.0"
 distribution = "2201.10.3"
 

@@ -299,7 +299,7 @@ modules = [
 
 [[package]]
 org = "induwarag"
-name = "find_approximate_duplicates"
+name = "data_standardization_with_approximate_matching"
 version = "0.1.0"
 dependencies = [
 	{org = "ballerina", name = "http"},
@@ -308,6 +308,6 @@ dependencies = [
 	{org = "ballerinai", name = "observe"}
 ]
 modules = [
-	{org = "induwarag", packageName = "find_approximate_duplicates", moduleName = "find_approximate_duplicates"}
+	{org = "induwarag", packageName = "data_standardization_with_approximate_matching", moduleName = "data_standardization_with_approximate_matching"}
 ]
 

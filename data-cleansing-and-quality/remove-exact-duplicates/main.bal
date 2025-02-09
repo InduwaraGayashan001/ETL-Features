@@ -17,9 +17,7 @@ function removeDuplicates(record {}[] dataWithDuplicates) returns record {}[]|er
 public function main() returns error? {
 
     SalesOrder[] orders = check io:fileReadCsv("./resources/orders.csv");
-
     record {}[] uniqueOrders = check removeDuplicates(orders);
-    io:println(uniqueOrders);
-
+    io:println(`Unique Orders: ${uniqueOrders}${"\n"}`);
     check io:fileWriteCsv("./resources/unique_orders.csv", uniqueOrders);
 }

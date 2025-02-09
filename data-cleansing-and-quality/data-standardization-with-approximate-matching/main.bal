@@ -73,6 +73,6 @@ public function main() returns error? {
 
     Customer[] customers = check io:fileReadCsv("./resources/customers.csv");
     record {}[] updatedCustomers = check standardizeData(customers, "city", "New York");
-    io:println(`Updated Customers: ${updatedCustomers}`);
+    io:println(`Updated Customers: ${updatedCustomers}${"\n"}`);
     check io:fileWriteCsv("./resources/updated_customers.csv", updatedCustomers);
 }

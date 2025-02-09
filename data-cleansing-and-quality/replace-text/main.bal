@@ -7,14 +7,14 @@ type Customer record {|
     string phone;
 |};
 
-function repalaceText(record{}[] dataSet, string fieldName, regexp:RegExp searchValue, string replaceValue) returns record{}[]|error {
+function repalaceText(record {}[] dataSet, string fieldName, regexp:RegExp searchValue, string replaceValue) returns record {}[]|error {
 
-    foreach record{} data in dataSet {
+    foreach record {} data in dataSet {
 
-        if data.hasKey(fieldName){
+        if data.hasKey(fieldName) {
             string newData = searchValue.replace(data[fieldName].toString(), replaceValue);
-            data[fieldName] = newData ;  
-        }else{
+            data[fieldName] = newData;
+        } else {
             return error("Provided field does not exit in the data");
         }
     }
@@ -29,9 +29,9 @@ public function main() returns error? {
     string fieldName = "phone";
     string replacement = "(+94) ";
 
-    record{}[] updatedCustomers = check repalaceText(customers, fieldName, regexPattern, replacement);
+    record {}[] updatedCustomers = check repalaceText(customers, fieldName, regexPattern, replacement);
 
     io:println(`Data after replacement: ${updatedCustomers}${"\n"}`);
-    check io:fileWriteCsv("./resources/customers_after_replacement.csv",updatedCustomers);
+    check io:fileWriteCsv("./resources/customers_after_replacement.csv", updatedCustomers);
 
 }
