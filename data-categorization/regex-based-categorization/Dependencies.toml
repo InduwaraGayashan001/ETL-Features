@@ -65,7 +65,7 @@ modules = [
 
 [[package]]
 org = "induwarag"
-name = "categorize_regex_based_data"
+name = "regex_based_categorization"
 version = "0.1.0"
 dependencies = [
 	{org = "ballerina", name = "io"},
@@ -73,6 +73,6 @@ dependencies = [
 	{org = "ballerinai", name = "observe"}
 ]
 modules = [
-	{org = "induwarag", packageName = "categorize_regex_based_data", moduleName = "categorize_regex_based_data"}
+	{org = "induwarag", packageName = "regex_based_categorization", moduleName = "regex_based_categorization"}
 ]
 

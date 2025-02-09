@@ -54,13 +54,13 @@ modules = [
 
 [[package]]
 org = "induwarag"
-name = "categorize_numeric_data"
+name = "numeric_data_categorization"
 version = "0.1.0"
 dependencies = [
 	{org = "ballerina", name = "io"},
 	{org = "ballerinai", name = "observe"}
 ]
 modules = [
-	{org = "induwarag", packageName = "categorize_numeric_data", moduleName = "categorize_numeric_data"}
+	{org = "induwarag", packageName = "numeric_data_categorization", moduleName = "numeric_data_categorization"}
 ]
 

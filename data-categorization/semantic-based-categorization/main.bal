@@ -66,7 +66,6 @@ function categorizeSemantic(record {}[] dataSet, string fieldName, string[] cate
     foreach int i in 0 ... dataSet.length() - 1 {
         if (dataSet[i].hasKey(fieldName)) {
             boolean isCategorized = false;
-
             foreach string category in categories {
                 if (category.equalsIgnoreCaseAscii(correctArray[i])) {
                     categorizedData[<int>categories.indexOf(category)].push(dataSet[i]);
@@ -79,10 +78,8 @@ function categorizeSemantic(record {}[] dataSet, string fieldName, string[] cate
             }
         } else {
             return error("Provided field deos not exist in the data");
-
         }
     }
-
     return categorizedData;
 }
 
@@ -94,9 +91,10 @@ public function main() returns error? {
 
     record {}[][] categorizedOrders = check categorizeSemantic(orders, "comments", categoryArray);
 
+    io:println(`Category 1(Excellent) : ${categorizedOrders[0]} ${"\n\n"}Category 2(Normal) : ${categorizedOrders[1]} ${"\n\n"}Category 3(Worst) : ${categorizedOrders[2]} ${"\n\n"}Category 4(Other) : ${categorizedOrders[3]} ${"\n"}`);
+
+
     foreach int i in 0 ... categorizedOrders.length() - 1 {
         check io:fileWriteCsv(string `./resources/orders${i + 1}.csv`, categorizedOrders[i]);
-
     }
-
 }
