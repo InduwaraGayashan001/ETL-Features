@@ -24,11 +24,9 @@ function joinData(record {}[] dataSet1, record {}[] dataSet2, string primaryKey)
         foreach string key in similarCustomer[1].keys() {
             if similarCustomer[0].hasKey(primaryKey) && similarCustomer[1].hasKey(primaryKey) {
                 similarCustomer[0][key] = similarCustomer[1][key];
-
             } else {
                 return error("Invalid Primary key");
             }
-
         }
         updatedCustomers.push(similarCustomer[0]);
     }

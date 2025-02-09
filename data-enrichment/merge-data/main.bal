@@ -19,7 +19,6 @@ public function main() returns error? {
     Customer[] customers3 = check io:fileReadCsv("./resources/customers3.csv");
     record {}[] mergedCustomers = mergeData([customers1, customers2, customers3]);
     io:println(`Merged Data : ${mergedCustomers}${"\n"}`);
-
     check io:fileWriteCsv("./resources/customers.csv", mergedCustomers);
 
 }
