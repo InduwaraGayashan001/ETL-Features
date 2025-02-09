@@ -65,7 +65,7 @@ modules = [
 
 [[package]]
 org = "induwarag"
-name = "split_data_by_regex"
+name = "filter_data_by_regex"
 version = "0.1.0"
 dependencies = [
 	{org = "ballerina", name = "io"},
@@ -73,6 +73,6 @@ dependencies = [
 	{org = "ballerinai", name = "observe"}
 ]
 modules = [
-	{org = "induwarag", packageName = "split_data_by_regex", moduleName = "split_data_by_regex"}
+	{org = "induwarag", packageName = "filter_data_by_regex", moduleName = "filter_data_by_regex"}
 ]
 

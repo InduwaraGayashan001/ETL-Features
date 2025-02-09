@@ -1,6 +1,6 @@
 [package]
 org = "induwarag"
-name = "split_data_by_relexp"
+name = "filter_data_by_ratio"
 version = "0.1.0"
 distribution = "2201.10.3"
 

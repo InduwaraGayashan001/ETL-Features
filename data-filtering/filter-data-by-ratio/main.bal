@@ -8,32 +8,29 @@ type Customer record {|
     int age;
 |};
 
-function splitDataByRatio(record{}[] data, float ratio) returns [record{}[],record{}[]]|error {
+function filterDataByRatio(record {}[] data, float ratio) returns [record {}[], record {}[]]|error {
 
     int dataLength = data.length();
     int splittingPoint = <int>(dataLength * ratio);
-    io:println(splittingPoint);
-
-    record{}[] shuffledData = check shuffle(data);
-
-    record{}[] splittedData1 = shuffledData.slice(0,splittingPoint);
-    record{}[] splittedData2 = shuffledData.slice(splittingPoint);
+    record {}[] shuffledData = check shuffle(data);
+    record {}[] splittedData1 = shuffledData.slice(0, splittingPoint);
+    record {}[] splittedData2 = shuffledData.slice(splittingPoint);
 
     return [splittedData1, splittedData2];
 
 }
 
-function shuffle(record{}[] data) returns record{}[]|error {
+function shuffle(record {}[] data) returns record {}[]|error {
 
     int dataLength = data.length();
 
     foreach int i in 0 ... dataLength - 1 {
         int|random:Error randomIndex = random:createIntInRange(i, dataLength - 1);
         if randomIndex is int {
-            record{} temp = data[i];
+            record {} temp = data[i];
             data[i] = data[randomIndex];
             data[randomIndex] = temp;
-        }else{
+        } else {
             return error("Error occurred during the randomization process");
         }
     }
@@ -42,8 +39,8 @@ function shuffle(record{}[] data) returns record{}[]|error {
 
 public function main() returns error? {
     Customer[] customers = check io:fileReadCsv("./resources/customers.csv");
-    [record{}[],record{}[]] [customers1, customers2] = check splitDataByRatio(customers, 0.7);
+    [record {}[], record {}[]] [customers1, customers2] = check filterDataByRatio(customers, 0.7);
     io:println(`First Dataset : ${customers1} ${"\n\n"}Second Dataset : ${customers2}${"\n"}`);
-    check io:fileWriteCsv("./resources/customers_1.csv",customers1);
-    check io:fileWriteCsv("./resources/customers_2.csv",customers2);    
+    check io:fileWriteCsv("./resources/customers_1.csv", customers1);
+    check io:fileWriteCsv("./resources/customers_2.csv", customers2);
 }

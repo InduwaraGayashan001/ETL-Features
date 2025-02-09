@@ -74,7 +74,7 @@ modules = [
 
 [[package]]
 org = "induwarag"
-name = "split_data_csv"
+name = "filter_data_by_ratio"
 version = "0.1.0"
 dependencies = [
 	{org = "ballerina", name = "io"},
@@ -82,6 +82,6 @@ dependencies = [
 	{org = "ballerinai", name = "observe"}
 ]
 modules = [
-	{org = "induwarag", packageName = "split_data_csv", moduleName = "split_data_csv"}
+	{org = "induwarag", packageName = "filter_data_by_ratio", moduleName = "filter_data_by_ratio"}
 ]
 

@@ -7,7 +7,7 @@ type Customer record {|
     string phone;
 |};
 
-function splitDataByRegex(record {}[] dataSet, string fieldName, regexp:RegExp regexPattern) returns [record {}[], record{}[]]|error {
+function splitDataByRegex(record {}[] dataSet, string fieldName, regexp:RegExp regexPattern) returns [record {}[], record {}[]]|error {
 
     record {}[] matchedData = from record {} data in dataSet
         where regexPattern.isFullMatch((data[fieldName].toString()))
@@ -24,7 +24,7 @@ public function main() returns error? {
     regexp:RegExp regexPattern = re `^\(\+94.*`;
     string fieldName = "phone";
 
-    [record {}[], record{}[]] [matchedCustomers, nonMatchedCustomers] = check splitDataByRegex(customers, fieldName, regexPattern);
+    [record {}[], record {}[]] [matchedCustomers, nonMatchedCustomers] = check splitDataByRegex(customers, fieldName, regexPattern);
 
     io:println(`Matched Data: ${matchedCustomers} ${"\n\n"}Non Matched Data: ${nonMatchedCustomers}${"\n"}`);
 

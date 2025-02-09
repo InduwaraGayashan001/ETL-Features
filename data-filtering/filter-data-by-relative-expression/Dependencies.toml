@@ -54,13 +54,13 @@ modules = [
 
 [[package]]
 org = "induwarag"
-name = "split_data_by_relexp"
+name = "filter_data_by_relative_expression"
 version = "0.1.0"
 dependencies = [
 	{org = "ballerina", name = "io"},
 	{org = "ballerinai", name = "observe"}
 ]
 modules = [
-	{org = "induwarag", packageName = "split_data_by_relexp", moduleName = "split_data_by_relexp"}
+	{org = "induwarag", packageName = "filter_data_by_relative_expression", moduleName = "filter_data_by_relative_expression"}
 ]
 
