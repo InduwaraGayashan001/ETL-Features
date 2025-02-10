@@ -80,6 +80,18 @@ dependencies = [
 
 [[package]]
 org = "ballerina"
+name = "random"
+version = "1.5.0"
+dependencies = [
+	{org = "ballerina", name = "jballerina.java"},
+	{org = "ballerina", name = "time"}
+]
+modules = [
+	{org = "ballerina", packageName = "random", moduleName = "random"}
+]
+
+[[package]]
+org = "ballerina"
 name = "time"
 version = "2.5.0"
 dependencies = [
@@ -106,6 +118,7 @@ dependencies = [
 	{org = "ballerina", name = "crypto"},
 	{org = "ballerina", name = "io"},
 	{org = "ballerina", name = "lang.array"},
+	{org = "ballerina", name = "random"},
 	{org = "ballerinai", name = "observe"}
 ]
 modules = [

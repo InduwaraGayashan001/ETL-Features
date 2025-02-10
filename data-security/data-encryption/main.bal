@@ -29,7 +29,6 @@ function decryptData(string[] dataSet, string keyBase64) returns record {}[]|err
     record {}[] decryptededDataSet = [];
 
     foreach int i in 0 ... dataSet.length() - 1 {
-
         byte[] dataByte = check array:fromBase64(dataSet[i]);
         byte[] plainText = check crypto:decryptAesEcb(dataByte, decrypt_key);
         string plainTextString = check string:fromBytes(plainText);
@@ -59,9 +58,5 @@ public function main() returns error? {
     string[] encryptedData = check io:fileReadLines("./resources/encrypted_customers.csv");
     record {}[] decryptedData = check decryptData(encryptedData, key);
 
-    foreach int i in 0 ... decryptedData.length() - 1 {
-        decryptedData[i] = check decryptedData[i].cloneWithType(Customer);
-    }
-    check io:fileWriteCsv("./resources/decrypted_customers.csv", decryptedData);
-
+    check io:fileWriteCsv("./resources/decrypted_customers.csv", decryptedData.map(n => check n.cloneWithType(Customer)));
 }
