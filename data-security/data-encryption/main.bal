@@ -1,6 +1,7 @@
 import ballerina/crypto;
 import ballerina/io;
 import ballerina/lang.array;
+import ballerina/random;
 
 configurable string key = ?;
 
@@ -39,13 +40,22 @@ function decryptData(string[] dataSet, string keyBase64) returns record {}[]|err
 
 public function main() returns error? {
 
-    //Encrypt the data
+    // Generate a new key
+    byte[16] aesKey = [];
+    foreach var i in 0 ... 15 {
+        aesKey[i] = <byte>(check random:createIntInRange(0, 255));
+    }
+    // Copy and save this key value in the Config.toml
+    string newKey = aesKey.toBase64();
+    io:println(newKey);
+
+    // Encrypt the data
     Customer[] customers = check io:fileReadCsv("./resources/customers.csv");
 
     string[] encryptedCustomers = check encryptData(customers, key);
     check io:fileWriteLines("./resources/encrypted_customers.csv", encryptedCustomers);
 
-    // //Decrypt the data
+    // Decrypt the data
     string[] encryptedData = check io:fileReadLines("./resources/encrypted_customers.csv");
     record {}[] decryptedData = check decryptData(encryptedData, key);
 
