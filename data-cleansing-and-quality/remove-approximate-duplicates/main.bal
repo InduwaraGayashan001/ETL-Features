@@ -2,18 +2,6 @@ import ballerina/io;
 import ballerina/regex;
 import ballerinax/openai.chat;
 
-type Message record {
-    string text;
-};
-
-type Item record {
-    Message[] parts;
-};
-
-type Content record {
-    Item content;
-};
-
 type Customer record {
     string customerId;
     string customerName;
