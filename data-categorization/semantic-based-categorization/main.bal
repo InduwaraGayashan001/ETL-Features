@@ -1,18 +1,6 @@
-import ballerina/http;
 import ballerina/io;
 import ballerina/regex;
-
-type Message record {
-    string text;
-};
-
-type Item record {
-    Message[] parts;
-};
-
-type Content record {
-    Item content;
-};
+import ballerinax/openai.chat;
 
 type Order record {|
     string order_id;
@@ -20,40 +8,38 @@ type Order record {|
     string comments;
 |};
 
-configurable string apiKey = ?;
+configurable string openAIKey = ?;
 
 function categorizeSemantic(record {}[] dataSet, string fieldName, string[] categories) returns record {}[][]|error {
 
     string[] valueArray = from record {} data in dataSet
         select data[fieldName].toString();
 
-    string apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + apiKey;
+    chat:Client chatClient = check new ({
+        auth: {
+            token: openAIKey
+        }
+    });
 
-    json requestBody = {
-        "contents": [
+    chat:CreateChatCompletionRequest req = {
+        model: "gpt-4o",
+        messages: [
             {
-                "parts": [
-                    {
-                        "text": "Classify each text in the array into one of the given category names. Respond only the results as an array of category names corresponding to each text. If a text does not match any of the provided categories, give the category name as 'Other' in the array. "
-                    },
-                    {
-                        "text": valueArray.toString()
-                    },
-                    {
-                        "text": categories.toString()
-                    }
-                ]
+                "role": "user",
+                "content": string `Classify each text in the array into one of the given category names.
+                                    - Data array : ${valueArray.toString()} 
+                                    - Category Names : ${categories.toString()}
+                                    Respond only the results as an array of category names corresponding to each text.
+                                    If a text does not match any of the provided categories, give the category name as 'Other' in the array.`
             }
         ]
     };
 
-    http:Client apiClient = check new http:Client(apiUrl);
-    record {} response = check apiClient->post("", requestBody);
+    chat:CreateChatCompletionResponse Result = check chatClient->/chat/completions.post(req);
 
-    Content[] result = check response["candidates"].cloneWithType();
-    string output = result[0].content.parts[0].text;
+    string content = check Result.choices[0].message?.content.ensureType();
 
-    string[] correctArray = re `,`.split(regex:replaceAll(output, "\"|'|\\[|\\]", ""));
+    string[] correctArray = re `,`.split(regex:replaceAll(content, "\"|'|\\[|\\]", ""));
     foreach int i in 0 ... correctArray.length() - 1 {
         correctArray[i] = correctArray[i].trim();
     }
