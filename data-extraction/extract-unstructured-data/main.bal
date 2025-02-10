@@ -37,8 +37,6 @@ function extractUnstructuredData(string[] dataSet, string[] fieldNames) returns 
 
     string content = check Result.choices[0].message?.content.ensureType();
 
-    io:println(content);
-
     string[] correctArray = re `\|`.split(regex:replaceAll(content, "\"|'|\\[|\\]", ""));
     foreach int i in 0 ... correctArray.length() - 1 {
         correctArray[i] = correctArray[i].trim();
