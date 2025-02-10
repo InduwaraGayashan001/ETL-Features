@@ -1,6 +1,6 @@
-import ballerina/http;
 import ballerina/io;
 import ballerina/regex;
+import ballerinax/openai.chat;
 
 type Message record {
     string text;
@@ -22,38 +22,35 @@ type Customer record {
     string address;
 };
 
-configurable string apiKey = ?;
+configurable string openAIKey = ?;
 
 function removeApproximateDuplicates(record {}[] dataSet) returns record {}[]|error {
 
-    string apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + apiKey;
+    chat:Client chatClient = check new ({
+        auth: {
+            token: openAIKey
+        }
+    });
 
-    json requestBody = {
-        "contents": [
+    chat:CreateChatCompletionRequest req = {
+        model: "gpt-4o",
+        messages: [
             {
-                "parts": [
-                    {
-                        "text": "Identify approximate duplicates in the dataset. Respond strictly with a plain string array (not JSON) where each record is labeled as 'unique' or 'duplicate'. Mark the first occurrence of any duplicate as 'unique'."
-                    },
-                    {
-                        "text": dataSet.toString()
-                    }
-                ]
+                "role": "user",
+                "content": string `Identify approximate duplicates in the dataset.
+                                    - Input Dataset : ${dataSet.toString()}  
+                                    Respond strictly with a plain string array (not JSON) where each record is labeled as 'unique' or 'duplicate'. 
+                                    Mark the first occurrence of any duplicate as 'unique'.  
+                                    Do not include any additional text, explanations, or variations.`
             }
         ]
     };
 
-    http:Client apiClient = check new http:Client(apiUrl);
+    chat:CreateChatCompletionResponse Result = check chatClient->/chat/completions.post(req);
 
-    record {} response = check apiClient->post("", requestBody);
+    string content = check Result.choices[0].message?.content.ensureType();
 
-    Content[] result = check response["candidates"].cloneWithType();
-
-    string output = result[0].content.parts[0].text;
-
-    io:println(output);
-
-    string[] correctArray = re `,`.split(regex:replaceAll(output, "\"|'|\\[|\\]", ""));
+    string[] correctArray = re `,`.split(regex:replaceAll(content, "\"|'|\\[|\\]", ""));
 
     foreach int i in 0 ... correctArray.length() - 1 {
         correctArray[i] = correctArray[i].trim();
