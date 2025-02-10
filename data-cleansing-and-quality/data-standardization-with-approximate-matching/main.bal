@@ -1,18 +1,6 @@
-import ballerina/http;
 import ballerina/io;
 import ballerina/regex;
-
-type Message record {
-    string text;
-};
-
-type Item record {
-    Message[] parts;
-};
-
-type Content record {
-    Item content;
-};
+import ballerinax/openai.chat;
 
 type Customer record {|
     string name;
@@ -21,51 +9,47 @@ type Customer record {|
     int age;
 |};
 
-configurable string apiKey = ?;
+configurable string openAIKey = ?;
 
 function standardizeData(record {}[] dataSet, string fieldName, string searchValue) returns record {}[]|error {
 
     string[] valueArray = from record {} data in dataSet
         select data[fieldName].toString();
 
-    string apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + apiKey;
+    chat:Client chatClient = check new ({
+        auth: {
+            token: openAIKey
+        }
+    });
 
-    json requestBody = {
-        "contents": [
+    chat:CreateChatCompletionRequest req = {
+        model: "gpt-4o",
+        messages: [
             {
-                "parts": [
-                    {
-                        "text": "Determine whether each text in the given array is an approximate duplicate of the provided search value. Respond only with an array of 'yes' or 'no'."
-                    },
-                    {
-                        "text": valueArray.toString()
-                    },
-                    {
-                        "text": searchValue
-                    }
-                ]
+                "role": "user",
+                "content": string `Determine whether each text in the given array is an approximate duplicate of the provided search value.
+                                    - Input Dataset : ${valueArray.toString()}
+                                    - Search Value : ${searchValue}
+                                    Respond only with an array of 'yes' or 'no'.  
+                                    Do not include any additional text, explanations, or variations.`
             }
         ]
     };
 
-    http:Client apiClient = check new http:Client(apiUrl);
+    chat:CreateChatCompletionResponse Result = check chatClient->/chat/completions.post(req);
 
-    record {} response = check apiClient->post("", requestBody);
+    string content = check Result.choices[0].message?.content.ensureType();
 
-    Content[] result = check response["candidates"].cloneWithType();
-
-    string output = result[0].content.parts[0].text;
-    string[] correctArray = re `,`.split(regex:replaceAll(output, "\"|'|\\[|\\]", ""));
-    foreach int i in 0 ... correctArray.length() - 1 {
-        correctArray[i] = correctArray[i].trim();
+    string[] contentArray = re `,`.split(regex:replaceAll(content, "\"|'|\\[|\\]", ""));
+    foreach int i in 0 ... contentArray.length() - 1 {
+        contentArray[i] = contentArray[i].trim();
     }
 
     foreach int i in 0 ... dataSet.length() - 1 {
-        if correctArray[i] is "yes" {
+        if contentArray[i] is "yes" {
             dataSet[i][fieldName] = searchValue;
         }
     }
-
     return dataSet;
 }
 
