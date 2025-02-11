@@ -20,7 +20,7 @@ function removeApproximateDuplicates(record {}[] dataSet) returns record {}[]|er
         }
     });
 
-    chat:CreateChatCompletionRequest req = {
+    chat:CreateChatCompletionRequest request = {
         model: "gpt-4o",
         messages: [
             {
@@ -34,18 +34,18 @@ function removeApproximateDuplicates(record {}[] dataSet) returns record {}[]|er
         ]
     };
 
-    chat:CreateChatCompletionResponse Result = check chatClient->/chat/completions.post(req);
+    chat:CreateChatCompletionResponse response = check chatClient->/chat/completions.post(request);
 
-    string content = check Result.choices[0].message?.content.ensureType();
+    string content = check response.choices[0].message?.content.ensureType();
 
-    string[] correctArray = re `,`.split(regex:replaceAll(content, "\"|'|\\[|\\]", ""));
+    string[] contentArray = re `,`.split(regex:replaceAll(content, "\"|'|\\[|\\]", ""));
 
-    foreach int i in 0 ... correctArray.length() - 1 {
-        correctArray[i] = correctArray[i].trim();
+    foreach int i in 0 ... contentArray.length() - 1 {
+        contentArray[i] = contentArray[i].trim();
     }
 
     return from record {} data in dataSet
-        where correctArray[<int>dataSet.indexOf(data)] is "unique"
+        where contentArray[<int>dataSet.indexOf(data)] is "unique"
         select data;
 }
 

@@ -22,7 +22,7 @@ function standardizeData(record {}[] dataSet, string fieldName, string searchVal
         }
     });
 
-    chat:CreateChatCompletionRequest req = {
+    chat:CreateChatCompletionRequest request = {
         model: "gpt-4o",
         messages: [
             {
@@ -36,9 +36,9 @@ function standardizeData(record {}[] dataSet, string fieldName, string searchVal
         ]
     };
 
-    chat:CreateChatCompletionResponse Result = check chatClient->/chat/completions.post(req);
+    chat:CreateChatCompletionResponse result = check chatClient->/chat/completions.post(request);
 
-    string content = check Result.choices[0].message?.content.ensureType();
+    string content = check result.choices[0].message?.content.ensureType();
 
     string[] contentArray = re `,`.split(regex:replaceAll(content, "\"|'|\\[|\\]", ""));
     foreach int i in 0 ... contentArray.length() - 1 {

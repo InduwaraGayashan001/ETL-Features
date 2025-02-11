@@ -21,7 +21,7 @@ function categorizeSemantic(record {}[] dataSet, string fieldName, string[] cate
         }
     });
 
-    chat:CreateChatCompletionRequest req = {
+    chat:CreateChatCompletionRequest request = {
         model: "gpt-4o",
         messages: [
             {
@@ -35,13 +35,13 @@ function categorizeSemantic(record {}[] dataSet, string fieldName, string[] cate
         ]
     };
 
-    chat:CreateChatCompletionResponse Result = check chatClient->/chat/completions.post(req);
+    chat:CreateChatCompletionResponse result = check chatClient->/chat/completions.post(request);
 
-    string content = check Result.choices[0].message?.content.ensureType();
+    string content = check result.choices[0].message?.content.ensureType();
 
-    string[] correctArray = re `,`.split(regex:replaceAll(content, "\"|'|\\[|\\]", ""));
-    foreach int i in 0 ... correctArray.length() - 1 {
-        correctArray[i] = correctArray[i].trim();
+    string[] contentArray = re `,`.split(regex:replaceAll(content, "\"|'|\\[|\\]", ""));
+    foreach int i in 0 ... contentArray.length() - 1 {
+        contentArray[i] = contentArray[i].trim();
     }
 
     record {}[][] categorizedData = [];
@@ -53,7 +53,7 @@ function categorizeSemantic(record {}[] dataSet, string fieldName, string[] cate
         if (dataSet[i].hasKey(fieldName)) {
             boolean isCategorized = false;
             foreach string category in categories {
-                if (category.equalsIgnoreCaseAscii(correctArray[i])) {
+                if (category.equalsIgnoreCaseAscii(contentArray[i])) {
                     categorizedData[<int>categories.indexOf(category)].push(dataSet[i]);
                     isCategorized = true;
                     break;

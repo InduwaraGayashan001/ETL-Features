@@ -18,7 +18,7 @@ function extractUnstructuredData(string[] dataSet, string[] fieldNames) returns 
         }
     });
 
-    chat:CreateChatCompletionRequest req = {
+    chat:CreateChatCompletionRequest request = {
         model: "gpt-4o",
         messages: [
             {
@@ -33,19 +33,19 @@ function extractUnstructuredData(string[] dataSet, string[] fieldNames) returns 
         ]
     };
 
-    chat:CreateChatCompletionResponse Result = check chatClient->/chat/completions.post(req);
+    chat:CreateChatCompletionResponse result = check chatClient->/chat/completions.post(request);
 
-    string content = check Result.choices[0].message?.content.ensureType();
+    string content = check result.choices[0].message?.content.ensureType();
 
-    string[] correctArray = re `\|`.split(regex:replaceAll(content, "\"|'|\\[|\\]", ""));
-    foreach int i in 0 ... correctArray.length() - 1 {
-        correctArray[i] = correctArray[i].trim();
+    string[] contentArray = re `\|`.split(regex:replaceAll(content, "\"|'|\\[|\\]", ""));
+    foreach int i in 0 ... contentArray.length() - 1 {
+        contentArray[i] = contentArray[i].trim();
     }
 
     record {} extractDetails = {};
 
     foreach int i in 0 ... fieldNames.length() - 1 {
-        extractDetails[fieldNames[i]] = correctArray[i];
+        extractDetails[fieldNames[i]] = contentArray[i];
     }
 
     return extractDetails;
