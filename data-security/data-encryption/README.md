@@ -15,5 +15,5 @@ Generate an AES key by running the program, copy the printed key, and replace `<
 Run the following command from the root directory of the sample:
 
 ```sh
-bal run
+$ bal run
 ```
