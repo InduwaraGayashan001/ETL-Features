@@ -12,6 +12,32 @@ function filterDataByRelativeExp(record {}[] dataSet, string fieldName, string o
     record {}[] matchedData = [];
     record {}[] nonMatchedData = [];
 
+    function (float fieldValue, string relativeOperation, float comparisonValue) returns boolean|error evaluateCondition = function (float fieldValue, string relativeOperation, float comparisonValue) returns boolean|error {
+        match operation {
+            ">" => {
+                return fieldValue > value;
+            }
+            "<" => {
+                return fieldValue < value;
+            }
+            ">=" => {
+                return fieldValue >= value;
+            }
+            "<=" => {
+                return fieldValue <= value;
+            }
+            "==" => {
+                return fieldValue == value;
+            }
+            "!=" => {
+                return fieldValue != value;
+            }
+            _ => {
+                return error("Unsupported operation for numeric values");
+            }
+        }
+    };
+
     foreach record {} data in dataSet {
         boolean isNumericData = data[fieldName].toString().matches(re `^[0-9,\.]*$`);
         if data.hasKey(fieldName) && isNumericData {
@@ -34,33 +60,6 @@ function filterDataByRelativeExp(record {}[] dataSet, string fieldName, string o
         }
     }
     return [matchedData, nonMatchedData];
-}
-
-function evaluateCondition(float fieldValue, string operation, float value) returns boolean|error {
-
-    match operation {
-        ">" => {
-            return fieldValue > value;
-        }
-        "<" => {
-            return fieldValue < value;
-        }
-        ">=" => {
-            return fieldValue >= value;
-        }
-        "<=" => {
-            return fieldValue <= value;
-        }
-        "==" => {
-            return fieldValue == value;
-        }
-        "!=" => {
-            return fieldValue != value;
-        }
-        _ => {
-            return error("Unsupported operation for numeric values");
-        }
-    }
 }
 
 public function main() returns error? {
