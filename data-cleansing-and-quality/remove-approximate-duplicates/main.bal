@@ -35,14 +35,8 @@ function removeApproximateDuplicates(record {}[] dataSet) returns record {}[]|er
     };
 
     chat:CreateChatCompletionResponse response = check chatClient->/chat/completions.post(request);
-
     string content = check response.choices[0].message?.content.ensureType();
-
-    string[] contentArray = re `,`.split(regex:replaceAll(content, "\"|'|\\[|\\]", ""));
-
-    foreach int i in 0 ... contentArray.length() - 1 {
-        contentArray[i] = contentArray[i].trim();
-    }
+    string[] contentArray = re `,`.split(regex:replaceAll(content, "\"|'|\\[|\\]", "")).'map(element => element.trim());
 
     return from record {} data in dataSet
         where contentArray[<int>dataSet.indexOf(data)] is "unique"

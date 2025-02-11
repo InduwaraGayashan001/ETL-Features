@@ -36,13 +36,8 @@ function categorizeSemantic(record {}[] dataSet, string fieldName, string[] cate
     };
 
     chat:CreateChatCompletionResponse result = check chatClient->/chat/completions.post(request);
-
     string content = check result.choices[0].message?.content.ensureType();
-
-    string[] contentArray = re `,`.split(regex:replaceAll(content, "\"|'|\\[|\\]", ""));
-    foreach int i in 0 ... contentArray.length() - 1 {
-        contentArray[i] = contentArray[i].trim();
-    }
+    string[] contentArray = re `,`.split(regex:replaceAll(content, "\"|'|\\[|\\]", "")).'map(element => element.trim());
 
     record {}[][] categorizedData = [];
     foreach int i in 0 ... categories.length() {
