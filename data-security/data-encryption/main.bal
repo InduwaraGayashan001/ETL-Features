@@ -24,7 +24,7 @@ function encryptData(record {}[] dataSet, string keyBase64) returns string[]|err
     return encryptedDataSet;
 }
 
-function decryptData(string[] dataSet, string keyBase64) returns record {}[]|error {
+function decryptData(string[] dataSet, string keyBase64, typedesc<record{}> dataType) returns record {}[]|error {
     byte[] decrypt_key = check array:fromBase64(keyBase64);
     record {}[] decryptededDataSet = [];
 
@@ -32,7 +32,7 @@ function decryptData(string[] dataSet, string keyBase64) returns record {}[]|err
         byte[] dataByte = check array:fromBase64(dataSet[i]);
         byte[] plainText = check crypto:decryptAesEcb(dataByte, decrypt_key);
         string plainTextString = check string:fromBytes(plainText);
-        decryptededDataSet[i] = check (check plainTextString.fromJsonString()).fromJsonWithType();
+        decryptededDataSet[i] = check (check plainTextString.fromJsonString()).cloneWithType(dataType);
     }
     return decryptededDataSet;
 }
@@ -56,7 +56,7 @@ public function main() returns error? {
 
     // Decrypt the data
     string[] encryptedData = check io:fileReadLines("./resources/encrypted_customers.csv");
-    record {}[] decryptedData = check decryptData(encryptedData, key);
+    record {}[] decryptedData = check decryptData(encryptedData, key, Customer);
 
-    check io:fileWriteCsv("./resources/decrypted_customers.csv", decryptedData.map(n => check n.cloneWithType(Customer)));
+    check io:fileWriteCsv("./resources/decrypted_customers.csv", decryptedData);
 }
