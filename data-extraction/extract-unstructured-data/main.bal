@@ -35,8 +35,8 @@ function extractUnstructuredData(string[] dataSet, string[] fieldNames) returns 
 
     chat:CreateChatCompletionResponse result = check chatClient->/chat/completions.post(request);
     string content = check result.choices[0].message?.content.ensureType();
-    string[] contentArray = re `,`.split(regex:replaceAll(content, "\"|'|\\[|\\]", "")).'map(element => element.trim());    
-
+    string[] contentArray = re `\|`.split(regex:replaceAll(content, "\"|'|\\[|\\]", "")).'map(element => element.trim());    
+    
     record {} extractDetails = {};
     foreach int i in 0 ... fieldNames.length() - 1 {
         extractDetails[fieldNames[i]] = contentArray[i];
