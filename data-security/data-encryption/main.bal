@@ -24,7 +24,7 @@ function encryptData(record {}[] dataSet, string keyBase64) returns string[]|err
     return encryptedDataSet;
 }
 
-function decryptData(string[] dataSet, string keyBase64, typedesc<record{}> dataType) returns record {}[]|error {
+function decryptData(string[] dataSet, string keyBase64, typedesc<record {}> dataType) returns record {}[]|error {
     byte[] decrypt_key = check array:fromBase64(keyBase64);
     record {}[] decryptededDataSet = [];
 
