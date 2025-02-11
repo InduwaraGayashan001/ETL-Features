@@ -8,7 +8,7 @@ type Customer record {|
 
 function removeNull(record {}[] dataSet) returns record {}[] {
 
-    function (record {} data)returns boolean isContainNull = function (record {} data) returns boolean {
+    function (record {} data) returns boolean isContainNull = function(record {} data) returns boolean {
         boolean containNull = false;
         foreach string key in data.keys() {
             if data[key] is null || data[key].toString().trim() == "" {
