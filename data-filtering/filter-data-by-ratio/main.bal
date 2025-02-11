@@ -8,33 +8,31 @@ type Customer record {|
     int age;
 |};
 
-function filterDataByRatio(record {}[] data, float ratio) returns [record {}[], record {}[]]|error {
+function filterDataByRatio(record {}[] dataSet, float ratio) returns [record {}[], record {}[]]|error {
 
-    int dataLength = data.length();
+    function (record {}[] data) returns record {}[]|error shuffle = function (record {}[] data) returns record {}[]|error{
+        int dataLength = data.length();
+        foreach int i in 0 ... dataLength - 1 {
+            int|random:Error randomIndex = random:createIntInRange(i, dataLength - 1);
+            if randomIndex is int {
+                record {} temp = data[i];
+                data[i] = data[randomIndex];
+                data[randomIndex] = temp;
+            } else {
+                return error("Error occurred during the randomization process");
+            }
+        }
+        return data;
+    };
+
+    int dataLength = dataSet.length();
     int splittingPoint = <int>(dataLength * ratio);
-    record {}[] shuffledData = check shuffle(data);
+    record {}[] shuffledData = check shuffle(dataSet);
     record {}[] splittedData1 = shuffledData.slice(0, splittingPoint);
     record {}[] splittedData2 = shuffledData.slice(splittingPoint);
 
     return [splittedData1, splittedData2];
 
-}
-
-function shuffle(record {}[] data) returns record {}[]|error {
-
-    int dataLength = data.length();
-
-    foreach int i in 0 ... dataLength - 1 {
-        int|random:Error randomIndex = random:createIntInRange(i, dataLength - 1);
-        if randomIndex is int {
-            record {} temp = data[i];
-            data[i] = data[randomIndex];
-            data[randomIndex] = temp;
-        } else {
-            return error("Error occurred during the randomization process");
-        }
-    }
-    return data;
 }
 
 public function main() returns error? {
