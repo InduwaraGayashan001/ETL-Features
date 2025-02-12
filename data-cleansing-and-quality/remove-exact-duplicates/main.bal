@@ -8,8 +8,8 @@ type SalesOrder record {|
     int date;
 |};
 
-function removeDuplicates(record {}[] dataWithDuplicates) returns record {}[]|error {
-    return from var data in dataWithDuplicates
+function removeDuplicates(record {}[] dataSet) returns record {}[]|error {
+    return from var data in dataSet
         group by data
         select data;
 }
