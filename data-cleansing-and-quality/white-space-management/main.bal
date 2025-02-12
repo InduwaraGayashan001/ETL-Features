@@ -6,20 +6,26 @@ type Customer record {|
     string phone;
 |};
 
-function handleWhiteSpaces(record {}[] dataSet) returns record {}[] {
+function handleWhiteSpaces(record {}[] dataSet) returns record {}[]|error {
 
-    foreach record {} data in dataSet {
-        foreach string key in data.keys() {
-            data[key] = re `\s+`.replaceAll(data[key].toString(), " ").trim();
+    do {
+        foreach record {} data in dataSet {
+            foreach string key in data.keys() {
+                data[key] = re `\s+`.replaceAll(data[key].toString(), " ").trim();
+            }
         }
+        return dataSet;
+
+    } on fail error e {
+        return e;
     }
-    return dataSet;
+
 }
 
 public function main() returns error? {
 
     Customer[] customers = check io:fileReadCsv("./resources/customers.csv");
-    record{}[] cleanedCustomers = handleWhiteSpaces(customers);
+    record {}[] cleanedCustomers = check handleWhiteSpaces(customers);
     io:println(`Updated Customers: ${cleanedCustomers}${"\n"}`);
     check io:fileWriteCsv("./resources/cleaned_customers.csv", cleanedCustomers);
 }
