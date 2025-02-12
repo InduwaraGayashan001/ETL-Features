@@ -19,7 +19,7 @@ function handleWhiteSpaces(record {}[] dataSet) returns record {}[] {
 public function main() returns error? {
 
     Customer[] customers = check io:fileReadCsv("./resources/customers.csv");
-    Customer[] cleanedCustomers = <Customer[]>handleWhiteSpaces(customers);
+    record{}[] cleanedCustomers = handleWhiteSpaces(customers);
     io:println(`Updated Customers: ${cleanedCustomers}${"\n"}`);
     check io:fileWriteCsv("./resources/cleaned_customers.csv", cleanedCustomers);
 }
