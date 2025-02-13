@@ -28,6 +28,7 @@ public function main() returns error? {
 
     Customer[] customers = check io:fileReadCsv("./resources/customers.csv");
     record {}[] sortedCustomers = check sort(customers, "age");
+    
     io:println(`Sorted Customers: ${sortedCustomers}${"\n"}`);
     check io:fileWriteCsv("./resources/sorted_customers.csv", sortedCustomers);
 }

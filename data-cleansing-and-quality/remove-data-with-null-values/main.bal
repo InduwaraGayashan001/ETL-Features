@@ -19,7 +19,6 @@ function removeNull(record {}[] dataSet) returns record {}[]|error {
             }
             return containNull;
         };
-
         return from record {} data in dataSet
             where !isContainNull(data)
             select data;
@@ -33,6 +32,7 @@ public function main() returns error? {
 
     Customer[] customers = check io:fileReadCsv("./resources/customers.csv");
     record {}[] cleanedCustomers = check removeNull(customers);
+    
     io:println(`Updated Customers: ${cleanedCustomers}${"\n"}`);
     check io:fileWriteCsv("./resources/cleaned_customers.csv", cleanedCustomers);
 
