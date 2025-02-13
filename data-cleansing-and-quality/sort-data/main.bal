@@ -8,16 +8,19 @@ type Customer record {|
 |};
 
 function sort(record {}[] dataSet, string fieldName, boolean isAscending = true) returns record {}[]|error {
-
-    if isAscending {
-        return from record {} data in dataSet
-            order by data[fieldName].toString() ascending
-            select data;
-    }
-    else {
-        return from record {} data in dataSet
-            order by data[fieldName].toString() descending
-            select data;
+    do{
+        if isAscending {
+            return from record {} data in dataSet
+                order by data[fieldName].toString() ascending
+                select data;
+        }
+        else {
+            return from record {} data in dataSet
+                order by data[fieldName].toString() descending
+                select data;
+        }
+    } on fail error e{
+        return e;
     }
 }
 
