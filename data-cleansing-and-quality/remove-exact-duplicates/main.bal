@@ -9,15 +9,20 @@ type SalesOrder record {|
 |};
 
 function removeDuplicates(record {}[] dataSet) returns record {}[]|error {
-    return from var data in dataSet
-        group by data
-        select data;
+    do {
+        return from var data in dataSet
+            group by data
+            select data;
+    } on fail error e {
+        return e;
+    }
 }
 
 public function main() returns error? {
 
     SalesOrder[] orders = check io:fileReadCsv("./resources/orders.csv");
     record {}[] uniqueOrders = check removeDuplicates(orders);
+    
     io:println(`Unique Orders: ${uniqueOrders}${"\n"}`);
     check io:fileWriteCsv("./resources/unique_orders.csv", uniqueOrders);
 }

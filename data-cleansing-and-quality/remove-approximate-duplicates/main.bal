@@ -13,34 +13,37 @@ type Customer record {
 configurable string openAIKey = ?;
 
 function removeApproximateDuplicates(record {}[] dataSet) returns record {}[]|error {
-
-    chat:Client chatClient = check new ({
-        auth: {
-            token: openAIKey
-        }
-    });
-
-    chat:CreateChatCompletionRequest request = {
-        model: "gpt-4o",
-        messages: [
-            {
-                "role": "user",
-                "content": string `Identify approximate duplicates in the dataset.
-                                    - Input Dataset : ${dataSet.toString()}  
-                                    Respond strictly with a plain string array (not JSON) where each record is labeled as 'unique' or 'duplicate'. 
-                                    Mark the first occurrence of any duplicate as 'unique'.  
-                                    Do not include any additional text, explanations, or variations.`
+    do {
+        chat:Client chatClient = check new ({
+            auth: {
+                token: openAIKey
             }
-        ]
-    };
+        });
 
-    chat:CreateChatCompletionResponse response = check chatClient->/chat/completions.post(request);
-    string content = check response.choices[0].message?.content.ensureType();
-    string[] contentArray = re `,`.split(regex:replaceAll(content, "\"|'|\\[|\\]", "")).'map(element => element.trim());
+        chat:CreateChatCompletionRequest request = {
+            model: "gpt-4o",
+            messages: [
+                {
+                    "role": "user",
+                    "content": string `Identify approximate duplicates in the dataset.
+                                        - Input Dataset : ${dataSet.toString()}  
+                                        Respond strictly with a plain string array (not JSON) where each record is labeled as 'unique' or 'duplicate'. 
+                                        Mark the first occurrence of any duplicate as 'unique'.  
+                                        Do not include any additional text, explanations, or variations.`
+                }
+            ]
+        };
 
-    return from record {} data in dataSet
-        where contentArray[<int>dataSet.indexOf(data)] is "unique"
-        select data;
+        chat:CreateChatCompletionResponse response = check chatClient->/chat/completions.post(request);
+        string content = check response.choices[0].message?.content.ensureType();
+        string[] contentArray = re `,`.split(regex:replaceAll(content, "\"|'|\\[|\\]", "")).'map(element => element.trim());
+
+        return from record {} data in dataSet
+            where contentArray[<int>dataSet.indexOf(data)] is "unique"
+            select data;
+    } on fail error e {
+        return e;
+    }
 }
 
 public function main() returns error? {

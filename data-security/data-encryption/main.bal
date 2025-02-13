@@ -13,28 +13,36 @@ type Customer record {
 };
 
 function encryptData(record {}[] dataSet, string keyBase64) returns string[]|error {
-    byte[] encryptkey = check array:fromBase64(keyBase64);
-    string[] encryptedDataSet = [];
+    do {
+        byte[] encryptkey = check array:fromBase64(keyBase64);
+        string[] encryptedDataSet = [];
 
-    foreach int i in 0 ... dataSet.length() - 1 {
-        byte[] dataByte = dataSet[i].toString().toBytes();
-        byte[] cipherText = check crypto:encryptAesEcb(dataByte, encryptkey);
-        encryptedDataSet.push(cipherText.toBase64());
+        foreach int i in 0 ... dataSet.length() - 1 {
+            byte[] dataByte = dataSet[i].toString().toBytes();
+            byte[] cipherText = check crypto:encryptAesEcb(dataByte, encryptkey);
+            encryptedDataSet.push(cipherText.toBase64());
+        }
+        return encryptedDataSet;
+    } on fail error e {
+        return e;
     }
-    return encryptedDataSet;
 }
 
 function decryptData(string[] dataSet, string keyBase64, typedesc<record {}> dataType) returns record {}[]|error {
-    byte[] decryptKey = check array:fromBase64(keyBase64);
-    record {}[] decryptededDataSet = [];
+    do {
+        byte[] decryptKey = check array:fromBase64(keyBase64);
+        record {}[] decryptededDataSet = [];
 
-    foreach int i in 0 ... dataSet.length() - 1 {
-        byte[] dataByte = check array:fromBase64(dataSet[i]);
-        byte[] plainText = check crypto:decryptAesEcb(dataByte, decryptKey);
-        string plainTextString = check string:fromBytes(plainText);
-        decryptededDataSet.push(check (check plainTextString.fromJsonString()).cloneWithType(dataType));
+        foreach int i in 0 ... dataSet.length() - 1 {
+            byte[] dataByte = check array:fromBase64(dataSet[i]);
+            byte[] plainText = check crypto:decryptAesEcb(dataByte, decryptKey);
+            string plainTextString = check string:fromBytes(plainText);
+            decryptededDataSet.push(check (check plainTextString.fromJsonString()).cloneWithType(dataType));
+        }
+        return decryptededDataSet;
+    } on fail error e {
+        return e;
     }
-    return decryptededDataSet;
 }
 
 public function main() returns error? {
