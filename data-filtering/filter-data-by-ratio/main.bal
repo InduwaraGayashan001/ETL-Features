@@ -13,14 +13,10 @@ function filterDataByRatio(record {}[] dataSet, float ratio) returns [record {}[
         function (record {}[] data) returns record {}[]|error shuffle = function(record {}[] data) returns record {}[]|error {
             int dataLength = data.length();
             foreach int i in 0 ... dataLength - 1 {
-                int|random:Error randomIndex = random:createIntInRange(i, dataLength - 1);
-                if randomIndex is int {
-                    record {} temp = data[i];
-                    data[i] = data[randomIndex];
-                    data[randomIndex] = temp;
-                } else {
-                    return error("Error occurred during the randomization process");
-                }
+                int randomIndex = check random:createIntInRange(i, dataLength - 1);
+                record {} temp = data[i];
+                data[i] = data[randomIndex];
+                data[randomIndex] = temp;
             }
             return data;
         };
@@ -35,7 +31,7 @@ function filterDataByRatio(record {}[] dataSet, float ratio) returns [record {}[
 }
 
 public function main() returns error? {
-    
+
     Customer[] customers = check io:fileReadCsv("./resources/customers.csv");
     [record {}[], record {}[]] [customers1, customers2] = check filterDataByRatio(customers, 0.7);
 
