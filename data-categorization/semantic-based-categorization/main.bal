@@ -10,6 +10,18 @@ type Order record {|
 
 configurable string openAIKey = ?;
 
+# Categorizes a dataset based on a string field using semantic classification via OpenAI's GPT model.
+# ```ballerina
+# record {}[] dataset = [{comment: "Great service!"}, {comment: "Terrible experience"}];
+# string fieldName = "comment";
+# string[] categories = ["Positive", "Negative"];
+# record {}[][] categorized = check categorizeSemantic(dataset, fieldName, categories);
+# ```
+# 
+# + dataSet - Array of records containing textual data.
+# + fieldName - Name of the field to categorize.
+# + categories - Array of category names for classification.
+# + return - A nested array of categorized records or an error if classification fails.
 function categorizeSemantic(record {}[] dataSet, string fieldName, string[] categories) returns record {}[][]|error {
     do {
         string[] valueArray = from record {} data in dataSet
@@ -62,6 +74,7 @@ function categorizeSemantic(record {}[] dataSet, string fieldName, string[] cate
         return e;
     }
 }
+
 
 public function main() returns error? {
 
