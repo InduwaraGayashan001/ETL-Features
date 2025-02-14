@@ -10,9 +10,14 @@ type Customer record {|
 # Categorizes a dataset based on a string field using a set of regular expressions.
 # ```ballerina
 # import ballerina/regexp;
-# record {}[] dataset = [{name: "Alice"}, {name: "Bob"}, {name: "Charlie"}];
+# record {}[] dataset = [
+#     { "name": "Alice", "city": "New York" },
+#     { "name": "Bob", "city": "newyork-usa" },
+#     { "name": "John", "city": "new york" },
+#     { "name": "Charlie", "city": "Los Angeles" }
+# ];
 # string fieldName = "name";
-# regexp:RegExp[] regexArray = [regexp:parse("^A.*$"), regexp:parse("^B.*$")];
+# regexp:RegExp[] regexArray = [re `A.*$`, re `^B.*$`, re `^C.*$`];
 # record {}[][] categorized = check categorizeRegexData(dataset, fieldName, regexArray);
 # ```
 # 
