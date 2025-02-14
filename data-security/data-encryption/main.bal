@@ -12,6 +12,20 @@ type Customer record {
     int age;
 };
 
+# Encrypts a dataset using AES-ECB encryption with a given Base64-encoded key.
+#
+# ```ballerina
+# record {}[] dataset = [
+#     { "id": 1, "name": "Alice", "age": 25 },
+#     { "id": 2, "name": "Bob", "age": 30 }
+# ];
+# string keyBase64 = "aGVsbG9zZWNyZXRrZXkxMjM0NTY=";
+# string[] encryptedData = check encryptData(dataset, keyBase64);
+# ```
+#
+# + dataSet - The dataset containing records to be encrypted.
+# + keyBase64 - The AES encryption key in Base64 format.
+# + return - An array of Base64-encoded encrypted strings.
 function encryptData(record {}[] dataSet, string keyBase64) returns string[]|error {
     do {
         byte[] encryptkey = check array:fromBase64(keyBase64);
