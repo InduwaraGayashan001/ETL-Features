@@ -12,7 +12,9 @@ configurable string openAIKey = ?;
 
 # Categorizes a dataset based on a string field using semantic classification via OpenAI's GPT model.
 # ```ballerina
-# record {}[] dataset = [{comment: "Great service!"}, {comment: "Terrible experience"}];
+# record {}[] dataset = [
+#     {id: 1,comment: "Great service!"},
+#     {id: 2,comment: "Terrible experience"}];
 # string fieldName = "comment";
 # string[] categories = ["Positive", "Negative"];
 # record {}[][] categorized = check categorizeSemantic(dataset, fieldName, categories);
