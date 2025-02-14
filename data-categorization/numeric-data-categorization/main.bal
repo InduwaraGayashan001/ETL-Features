@@ -7,6 +7,18 @@ type Customer record {|
     int age;
 |};
 
+# Categorizes a dataset based on a numeric field and specified ranges.
+# ```ballerina
+# record {}[] dataset = [{value: 10.5}, {value: 25.0}, {value: 5.3}];
+# string fieldName = "value";
+# float[][] rangeArray = [[0.0, 10.0], [10.0, 20.0]];
+# record {}[][] categorized = check categorizeNumeric(dataset, fieldName, rangeArray);
+# ```
+# 
+# + dataset - Array of records containing numeric values.
+# + fieldName - Name of the numeric field to categorize.
+# + rangeArray - Array of float ranges specifying category boundaries.
+# + return - A nested array of categorized records or an error if categorization fails.
 function categorizeNumeric(record {}[] dataset, string fieldName, float[][] rangeArray) returns record {}[][]|error {
     do {
         record {}[][] categorizedData = [];
@@ -32,6 +44,7 @@ function categorizeNumeric(record {}[] dataset, string fieldName, float[][] rang
         return e;
     }
 }
+
 
 public function main() returns error? {
 
