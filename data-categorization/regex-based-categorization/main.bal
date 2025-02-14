@@ -12,8 +12,8 @@ type Customer record {|
 # import ballerina/regexp;
 # record {}[] dataset = [
 #     { "name": "Alice", "city": "New York" },
-#     { "name": "Bob", "city": "newyork-usa" },
-#     { "name": "John", "city": "new york" },
+#     { "name": "Bob", "city": "Colombo" },
+#     { "name": "John", "city": "Boston" },
 #     { "name": "Charlie", "city": "Los Angeles" }
 # ];
 # string fieldName = "name";
