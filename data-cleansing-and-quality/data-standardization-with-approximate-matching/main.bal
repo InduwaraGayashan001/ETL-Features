@@ -11,6 +11,18 @@ type Customer record {|
 
 configurable string openAIKey = ?;
 
+# Standardizes a dataset by replacing approximate matches in a string field with a specified search value.
+# ```ballerina
+# record {}[] dataset = [{city: "new york"}, {city: "New York"}, {city: "nyc"}];
+# string fieldName = "city";
+# string searchValue = "New York";
+# record {}[] standardizedData = check standardizeData(dataset, fieldName, searchValue);
+# ```
+# 
+# + dataSet - Array of records containing string values to be standardized.
+# + fieldName - Name of the string field to check for approximate matches.
+# + searchValue - The exact value to replace approximate matches.
+# + return - An updated dataset with standardized string values or an error if the operation fails.
 function standardizeData(record {}[] dataSet, string fieldName, string searchValue) returns record {}[]|error {
     do {
         string[] valueArray = from record {} data in dataSet
