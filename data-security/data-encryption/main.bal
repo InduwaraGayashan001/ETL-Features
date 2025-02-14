@@ -42,6 +42,22 @@ function encryptData(record {}[] dataSet, string keyBase64) returns string[]|err
     }
 }
 
+# Decrypts a dataset using AES-ECB decryption with a given Base64-encoded key and returns records of the specified type.
+#
+# ```ballerina
+# string[] encryptedData = [
+#     "sdfjsdlfjsdl==", 
+#     "j34nkj23n4k3=="
+# ];
+# string keyBase64 = "aGVsbG9zZWNyZXRrZXkxMjM0NTY=";
+# typedesc<record { string name; int age; }> dataType = record { string name; int age; };
+# record {}[] decryptedData = check decryptData(encryptedData, keyBase64, dataType);
+# ```
+#
+# + dataSet - The dataset containing the Base64-encoded encrypted strings to be decrypted.
+# + keyBase64 - The AES decryption key in Base64 format.
+# + dataType - The type descriptor of the record to be returned after decryption.
+# + return - An array of decrypted records in the specified `dataType`.
 function decryptData(string[] dataSet, string keyBase64, typedesc<record {}> dataType) returns record {}[]|error {
     do {
         byte[] decryptKey = check array:fromBase64(keyBase64);
