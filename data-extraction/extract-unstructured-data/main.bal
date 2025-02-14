@@ -10,6 +10,16 @@ type ReviewSummary record {|
     string improvements;
 |};
 
+# Extracts unstructured data from a string array and maps it to the specified fields.
+# ```ballerina
+# string[] reviews = ["The product is great, but it could be improved.", "Not bad, but needs some updates."];
+# string[] fields = ["goodPoints", "badPoints", "improvements"];
+# record {} extractedDetails = check extractUnstructuredData(reviews, fields);
+# ```
+# 
+# + dataSet - Array of unstructured string data (e.g., reviews or comments).
+# + fieldNames - Array of field names to map the extracted details.
+# + return - A record with extracted details mapped to the specified field names or an error if extraction fails.
 function extractUnstructuredData(string[] dataSet, string[] fieldNames) returns record {}|error {
     do {
         chat:Client chatClient = check new ({
@@ -47,6 +57,7 @@ function extractUnstructuredData(string[] dataSet, string[] fieldNames) returns 
         return e;
     }
 }
+
 
 public function main(string[] arg) returns error? {
 
