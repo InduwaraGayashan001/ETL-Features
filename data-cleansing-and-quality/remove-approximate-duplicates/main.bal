@@ -12,6 +12,19 @@ type Customer record {
 
 configurable string openAIKey = ?;
 
+# Removes approximate duplicates from a dataset, keeping only the first occurrence of each duplicate record.
+# ```ballerina
+# record {}[] dataset = [
+#     { "name": "Alice", "city": "New York" },
+#     { "name": "Bob", "city": "New York" },
+#     { "name": "Alice", "city": "new york" },
+#     { "name": "Charlie", "city": "Los Angeles" }
+# ];
+# record {}[] uniqueData = check removeApproximateDuplicates(dataset);
+# ```
+# 
+# + dataSet - Array of records containing data that may have approximate duplicates.
+# + return - A dataset with approximate duplicates removed, keeping only the first occurrence of each duplicate record.
 function removeApproximateDuplicates(record {}[] dataSet) returns record {}[]|error {
     do {
         chat:Client chatClient = check new ({
