@@ -6,6 +6,18 @@ type Customer record {|
     string? phone;
 |};
 
+# Removes records that contain null or empty string values in any field.
+# ```ballerina
+# record {}[] dataset = [
+#     { "name": "Alice", "city": "New York" },
+#     { "name": "Bob", "city": null },
+#     { "name": "Charlie", "city": "" }
+# ];
+# record {}[] filteredData = check removeNull(dataset);
+# ```
+#
+# + dataSet - Array of records containing potential null or empty fields.
+# + return - A dataset with records containing null or empty string values removed.
 function removeNull(record {}[] dataSet) returns record {}[]|error {
 
     do {
