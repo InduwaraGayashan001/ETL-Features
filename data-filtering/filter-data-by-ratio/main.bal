@@ -13,7 +13,7 @@ function filterDataByRatio(record {}[] dataSet, float ratio) returns [record {}[
         function (record {}[] data) returns record {}[]|error shuffle = function(record {}[] data) returns record {}[]|error {
             int dataLength = data.length();
             foreach int i in 0 ... dataLength - 1 {
-                int randomIndex = check random:createIntInRange(i, dataLength - 1);
+                int randomIndex = check random:createIntInRange(i, dataLength);
                 record {} temp = data[i];
                 data[i] = data[randomIndex];
                 data[randomIndex] = temp;
