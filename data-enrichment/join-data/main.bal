@@ -13,6 +13,18 @@ type ContactDetails record {
     string country;
 };
 
+# Merges two datasets based on a common primary key, updating records from the first dataset with matching records from the second.
+# ```ballerina
+# record {}[] dataset1 = [{id: 1, name: "Alice"}, {id: 2, name: "Bob"}];
+# record {}[] dataset2 = [{id: 1, age: 25}, {id: 2, age: 30}];
+# string primaryKey = "id";
+# record {}[] mergedData = check joinData(dataset1, dataset2, primaryKey);
+# ```
+# 
+# + dataSet1 - First dataset containing base records.
+# + dataSet2 - Second dataset with additional data to be merged.
+# + primaryKey - The field used to match records between the datasets.
+# + return - A merged dataset with updated records or an error if merging fails.
 function joinData(record {}[] dataSet1, record {}[] dataSet2, string primaryKey) returns record {}[]|error {
     do {
         record {}[] updatedCustomers = [];
@@ -30,6 +42,7 @@ function joinData(record {}[] dataSet1, record {}[] dataSet2, string primaryKey)
         return e;
     }
 }
+
 
 public function main() returns error? {
 
