@@ -7,6 +7,19 @@ type Customer record {|
     string phone;
 |};
 
+# Categorizes a dataset based on a string field using a set of regular expressions.
+# ```ballerina
+# import ballerina/regexp;
+# record {}[] dataset = [{name: "Alice"}, {name: "Bob"}, {name: "Charlie"}];
+# string fieldName = "name";
+# regexp:RegExp[] regexArray = [regexp:parse("^A.*$"), regexp:parse("^B.*$")];
+# record {}[][] categorized = check categorizeRegexData(dataset, fieldName, regexArray);
+# ```
+# 
+# + dataset - Array of records containing string values.
+# + fieldName - Name of the string field to categorize.
+# + regexArray - Array of regular expressions for matching categories.
+# + return - A nested array of categorized records or an error if categorization fails.
 function categorizeRegexData(record {}[] dataset, string fieldName, regexp:RegExp[] regexArray) returns record {}[][]|error {
     do {
         record {}[][] categorizedData = [];
@@ -32,6 +45,7 @@ function categorizeRegexData(record {}[] dataset, string fieldName, regexp:RegEx
         return e;
     }
 }
+
 
 public function main() returns error? {
 
