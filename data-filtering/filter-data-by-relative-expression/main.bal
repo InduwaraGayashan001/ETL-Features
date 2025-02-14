@@ -7,6 +7,26 @@ type Customer record {|
     int age;
 |};
 
+# Filters a dataset based on a relative numeric comparison expression.
+# 
+# ```ballerina
+# record {}[] dataset = [
+#     { "id": 1, "name": "Alice", "age": 25 },
+#     { "id": 2, "name": "Bob", "age": 30 },
+#     { "id": 3, "name": "Charlie", "age": 22 },
+#     { "id": 4, "name": "David", "age": 28 }
+# ];
+# string fieldName = "age";
+# string operation = ">";
+# float value = 25;
+# [record {}[] olderThan25, record {}[] youngerOrEqual25] = check filterDataByRelativeExp(dataset, fieldName, operation, value);
+# ```
+#
+# + dataSet - Array of records containing numeric fields for comparison.
+# + fieldName - Name of the field to evaluate.
+# + operation - Comparison operator (`>`, `<`, `>=`, `<=`, `==`, `!=`).
+# + value - Numeric value to compare against.
+# + return - A tuple with two subsets: one that matches the condition and one that does not.
 function filterDataByRelativeExp(record {}[] dataSet, string fieldName, string operation, float value) returns [record {}[], record {}[]]|error {
     do {
         record {}[] matchedData = [];
