@@ -13,7 +13,12 @@ configurable string openAIKey = ?;
 
 # Standardizes a dataset by replacing approximate matches in a string field with a specified search value.
 # ```ballerina
-# record {}[] dataset = [{city: "new york"}, {city: "New York"}, {city: "nyc"}];
+# record {}[] dataset = [
+#     { "name": "Alice", "city": "New York" },
+#     { "name": "Bob", "city": "newyork-usa" },
+#     { "name": "John", "city": "new york" },
+#     { "name": "Charlie", "city": "Los Angeles" }
+# ];
 # string fieldName = "city";
 # string searchValue = "New York";
 # record {}[] standardizedData = check standardizeData(dataset, fieldName, searchValue);
