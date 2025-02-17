@@ -23,9 +23,9 @@ configurable string openAIKey = ?;
 # record {}[] uniqueData = check removeApproximateDuplicates(dataset);
 # ```
 # 
-# + dataSet - Array of records containing data that may have approximate duplicates.
+# + dataset - Array of records containing data that may have approximate duplicates.
 # + return - A dataset with approximate duplicates removed, keeping only the first occurrence of each duplicate record.
-function removeApproximateDuplicates(record {}[] dataSet) returns record {}[]|error {
+function removeApproximateDuplicates(record {}[] dataset) returns record {}[]|error {
     do {
         chat:Client chatClient = check new ({
             auth: {
@@ -39,7 +39,7 @@ function removeApproximateDuplicates(record {}[] dataSet) returns record {}[]|er
                 {
                     "role": "user",
                     "content": string `Identify approximate duplicates in the dataset.
-                                        - Input Dataset : ${dataSet.toString()}  
+                                        - Input Dataset : ${dataset.toString()}  
                                         Respond strictly with a plain string array (not JSON) where each record is labeled as 'unique' or 'duplicate'. 
                                         Mark the first occurrence of any duplicate as 'unique'.  
                                         Do not include any additional text, explanations, or variations.`
@@ -51,8 +51,8 @@ function removeApproximateDuplicates(record {}[] dataSet) returns record {}[]|er
         string content = check response.choices[0].message?.content.ensureType();
         string[] contentArray = re `,`.split(regex:replaceAll(content, "\"|'|\\[|\\]", "")).'map(element => element.trim());
 
-        return from record {} data in dataSet
-            where contentArray[<int>dataSet.indexOf(data)] is "unique"
+        return from record {} data in dataset
+            where contentArray[<int>dataset.indexOf(data)] is "unique"
             select data;
     } on fail error e {
         return e;

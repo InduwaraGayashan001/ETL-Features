@@ -20,18 +20,18 @@ type Customer record {|
 # record {}[] updatedData = check replaceText(dataset, fieldName, searchValue, replaceValue);
 # ```
 #
-# + dataSet - Array of records where text in a specified field will be replaced.
+# + dataset - Array of records where text in a specified field will be replaced.
 # + fieldName - The name of the field where text replacement will occur.
 # + searchValue - A regular expression to match text that will be replaced.
 # + replaceValue - The value that will replace the matched text.
 # + return - A new dataset with the replaced text in the specified field.
-function repalaceText(record {}[] dataSet, string fieldName, regexp:RegExp searchValue, string replaceValue) returns record {}[]|error {
+function repalaceText(record {}[] dataset, string fieldName, regexp:RegExp searchValue, string replaceValue) returns record {}[]|error {
     do {
-        foreach record {} data in dataSet {
+        foreach record {} data in dataset {
             string newData = searchValue.replace(data[fieldName].toString(), replaceValue);
             data[fieldName] = newData;
         }
-        return dataSet;
+        return dataset;
     } on fail error e {
         return e;
     }

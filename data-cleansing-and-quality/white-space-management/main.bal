@@ -15,16 +15,16 @@ type Customer record {|
 # record {}[] cleanedData = check handleWhiteSpaces(dataset);
 # ```
 #
-# + dataSet - Array of records with possible extra spaces.
+# + dataset - Array of records with possible extra spaces.
 # + return - A dataset where multiple spaces are replaced with a single space, and values are trimmed.
-function handleWhiteSpaces(record {}[] dataSet) returns record {}[]|error {
+function handleWhiteSpaces(record {}[] dataset) returns record {}[]|error {
     do {
-        foreach record {} data in dataSet {
+        foreach record {} data in dataset {
             foreach string key in data.keys() {
                 data[key] = re `\s+`.replaceAll(data[key].toString(), " ").trim();
             }
         }
-        return dataSet;
+        return dataset;
     } on fail error e {
         return e;
     }

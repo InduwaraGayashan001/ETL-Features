@@ -21,15 +21,15 @@ type ContactDetails record {
 # record {}[] mergedData = check joinData(dataset1, dataset2, primaryKey);
 # ```
 # 
-# + dataSet1 - First dataset containing base records.
-# + dataSet2 - Second dataset with additional data to be merged.
+# + dataset1 - First dataset containing base records.
+# + dataset2 - Second dataset with additional data to be merged.
 # + primaryKey - The field used to match records between the datasets.
 # + return - A merged dataset with updated records or an error if merging fails.
-function joinData(record {}[] dataSet1, record {}[] dataSet2, string primaryKey) returns record {}[]|error {
+function joinData(record {}[] dataset1, record {}[] dataset2, string primaryKey) returns record {}[]|error {
     do {
         record {}[] updatedCustomers = [];
-        record {}[][] similarCustomers = from record {} data1 in dataSet1
-            join record {} data2 in dataSet2 on data1[primaryKey] equals data2[primaryKey]
+        record {}[][] similarCustomers = from record {} data1 in dataset1
+            join record {} data2 in dataset2 on data1[primaryKey] equals data2[primaryKey]
             select [data1, data2];
         foreach record {}[] similarCustomer in similarCustomers {
             foreach string key in similarCustomer[1].keys() {

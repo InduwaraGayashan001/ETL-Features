@@ -19,19 +19,19 @@ type Customer record {|
 # record {}[] sortedData = check sort(dataset, fieldName, isAscending);
 # ```
 #
-# + dataSet - Array of records to be sorted.
+# + dataset - Array of records to be sorted.
 # + fieldName - The field by which sorting is performed.
 # + isAscending - Boolean flag to determine sorting order (default: ascending).
 # + return - A sorted dataset based on the specified field.
-function sort(record {}[] dataSet, string fieldName, boolean isAscending = true) returns record {}[]|error {
+function sort(record {}[] dataset, string fieldName, boolean isAscending = true) returns record {}[]|error {
     do{
         if isAscending {
-            return from record {} data in dataSet
+            return from record {} data in dataset
                 order by data[fieldName].toString() ascending
                 select data;
         }
         else {
-            return from record {} data in dataSet
+            return from record {} data in dataset
                 order by data[fieldName].toString() descending
                 select data;
         }

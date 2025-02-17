@@ -22,12 +22,12 @@ type Customer record {|
 # [record {}[] olderThan25, record {}[] youngerOrEqual25] = check filterDataByRelativeExp(dataset, fieldName, operation, value);
 # ```
 #
-# + dataSet - Array of records containing numeric fields for comparison.
+# + dataset - Array of records containing numeric fields for comparison.
 # + fieldName - Name of the field to evaluate.
 # + operation - Comparison operator (`>`, `<`, `>=`, `<=`, `==`, `!=`).
 # + value - Numeric value to compare against.
 # + return - A tuple with two subsets: one that matches the condition and one that does not.
-function filterDataByRelativeExp(record {}[] dataSet, string fieldName, string operation, float value) returns [record {}[], record {}[]]|error {
+function filterDataByRelativeExp(record {}[] dataset, string fieldName, string operation, float value) returns [record {}[], record {}[]]|error {
     do {
         record {}[] matchedData = [];
         record {}[] nonMatchedData = [];
@@ -57,7 +57,7 @@ function filterDataByRelativeExp(record {}[] dataSet, string fieldName, string o
                 }
             }
         };
-        foreach record {} data in dataSet {
+        foreach record {} data in dataset {
             float fieldValue = <float>data[fieldName];
             boolean conditionResult = check evaluateCondition(fieldValue, operation, value);
             if conditionResult {

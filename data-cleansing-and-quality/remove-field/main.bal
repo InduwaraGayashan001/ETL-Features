@@ -18,12 +18,12 @@ type Customer record {|
 # record {}[] updatedData = check removeField(dataset, fieldName);
 # ```
 #
-# + dataSet - Array of records with fields to be removed.
+# + dataset - Array of records with fields to be removed.
 # + fieldName - The name of the field to remove from each record.
 # + return - A new dataset with the specified field removed from each record.
-function removeField(record {}[] dataSet, string fieldName) returns record {}[]|error {
+function removeField(record {}[] dataset, string fieldName) returns record {}[]|error {
     do {
-        return from record {} data in dataSet
+        return from record {} data in dataset
             let var val = data.remove(fieldName)
             where val != ()
             select data;

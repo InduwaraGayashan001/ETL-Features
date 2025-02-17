@@ -16,9 +16,9 @@ type Customer record {|
 # record {}[] filteredData = check removeNull(dataset);
 # ```
 #
-# + dataSet - Array of records containing potential null or empty fields.
+# + dataset - Array of records containing potential null or empty fields.
 # + return - A dataset with records containing null or empty string values removed.
-function removeNull(record {}[] dataSet) returns record {}[]|error {
+function removeNull(record {}[] dataset) returns record {}[]|error {
 
     do {
         function (record {} data) returns boolean isContainNull = function(record {} data) returns boolean {
@@ -31,7 +31,7 @@ function removeNull(record {}[] dataSet) returns record {}[]|error {
             }
             return containNull;
         };
-        return from record {} data in dataSet
+        return from record {} data in dataset
             where !isContainNull(data)
             select data;
     } on fail error e {

@@ -17,10 +17,10 @@ type ReviewSummary record {|
 # record {} extractedDetails = check extractUnstructuredData(reviews, fields);
 # ```
 # 
-# + dataSet - Array of unstructured string data (e.g., reviews or comments).
+# + dataset - Array of unstructured string data (e.g., reviews or comments).
 # + fieldNames - Array of field names to map the extracted details.
 # + return - A record with extracted details mapped to the specified field names or an error if extraction fails.
-function extractUnstructuredData(string[] dataSet, string[] fieldNames) returns record {}|error {
+function extractUnstructuredData(string[] dataset, string[] fieldNames) returns record {}|error {
     do {
         chat:Client chatClient = check new ({
             auth: {
@@ -34,7 +34,7 @@ function extractUnstructuredData(string[] dataSet, string[] fieldNames) returns 
                 {
                     "role": "user",
                     "content": string `Extract relevant details from the given string array and map them to the specified fields. 
-                                    - Input Data : ${dataSet.toString()} 
+                                    - Input Data : ${dataset.toString()} 
                                     - Fields to extract: ${fieldNames.toString()}
                                     Respond with a single string, where extracted field values are separated by '|'
                                     Use the exact format: detail1, detail2, detail3,...|detail1, detail2, detail3,...|detail1, detail2, detail3,...  

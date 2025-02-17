@@ -24,13 +24,13 @@ configurable string openAIKey = ?;
 # record {}[] standardizedData = check standardizeData(dataset, fieldName, searchValue);
 # ```
 # 
-# + dataSet - Array of records containing string values to be standardized.
+# + dataset - Array of records containing string values to be standardized.
 # + fieldName - Name of the string field to check for approximate matches.
 # + searchValue - The exact value to replace approximate matches.
 # + return - An updated dataset with standardized string values or an error if the operation fails.
-function standardizeData(record {}[] dataSet, string fieldName, string searchValue) returns record {}[]|error {
+function standardizeData(record {}[] dataset, string fieldName, string searchValue) returns record {}[]|error {
     do {
-        string[] valueArray = from record {} data in dataSet
+        string[] valueArray = from record {} data in dataset
             select data[fieldName].toString();
 
         chat:Client chatClient = check new ({
@@ -57,12 +57,12 @@ function standardizeData(record {}[] dataSet, string fieldName, string searchVal
         string content = check result.choices[0].message?.content.ensureType();
         string[] contentArray = re `,`.split(regex:replaceAll(content, "\"|'|\\[|\\]", "")).'map(element => element.trim());
 
-        foreach int i in 0 ... dataSet.length() - 1 {
+        foreach int i in 0 ... dataset.length() - 1 {
             if contentArray[i] is "yes" {
-                dataSet[i][fieldName] = searchValue;
+                dataset[i][fieldName] = searchValue;
             }
         }
-        return dataSet;
+        return dataset;
     } on fail error e {
         return e;
     }

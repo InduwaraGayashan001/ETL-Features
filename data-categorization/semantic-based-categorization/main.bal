@@ -20,13 +20,13 @@ configurable string openAIKey = ?;
 # record {}[][] categorized = check categorizeSemantic(dataset, fieldName, categories);
 # ```
 # 
-# + dataSet - Array of records containing textual data.
+# + dataset - Array of records containing textual data.
 # + fieldName - Name of the field to categorize.
 # + categories - Array of category names for classification.
 # + return - A nested array of categorized records or an error if classification fails.
-function categorizeSemantic(record {}[] dataSet, string fieldName, string[] categories) returns record {}[][]|error {
+function categorizeSemantic(record {}[] dataset, string fieldName, string[] categories) returns record {}[][]|error {
     do {
-        string[] valueArray = from record {} data in dataSet
+        string[] valueArray = from record {} data in dataset
             select data[fieldName].toString();
 
         chat:Client chatClient = check new ({
@@ -58,17 +58,17 @@ function categorizeSemantic(record {}[] dataSet, string fieldName, string[] cate
             categorizedData.push([]);
         }
 
-        foreach int i in 0 ... dataSet.length() - 1 {
+        foreach int i in 0 ... dataset.length() - 1 {
             boolean isCategorized = false;
             foreach string category in categories {
                 if (category.equalsIgnoreCaseAscii(contentArray[i])) {
-                    categorizedData[<int>categories.indexOf(category)].push(dataSet[i]);
+                    categorizedData[<int>categories.indexOf(category)].push(dataset[i]);
                     isCategorized = true;
                     break;
                 }
             }
             if (!isCategorized) {
-                categorizedData[categories.length()].push(dataSet[i]);
+                categorizedData[categories.length()].push(dataset[i]);
             }
         }
         return categorizedData;

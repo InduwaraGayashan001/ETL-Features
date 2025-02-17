@@ -18,12 +18,12 @@ type SalesOrder record {|
 # record {}[] uniqueData = check removeDuplicates(dataset);
 # ```
 #
-# + dataSet - Array of records that may contain duplicates.
+# + dataset - Array of records that may contain duplicates.
 # + return - A dataset with duplicates removed.
 
-function removeDuplicates(record {}[] dataSet) returns record {}[]|error {
+function removeDuplicates(record {}[] dataset) returns record {}[]|error {
     do {
-        return from var data in dataSet
+        return from var data in dataset
             group by data
             select data;
     } on fail error e {
